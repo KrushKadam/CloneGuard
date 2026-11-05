@@ -1,0 +1,379 @@
+[
+  {
+    "id": "urgency_abhi_karna_hoga",
+    "category": "urgency",
+    "phrase_variants": [
+      "abhi karna hoga",
+      "abhi karna hai",
+      "abhi karni hogi",
+      "अभी करना होगा",
+      "अभी करना है",
+      "अभी करनी होगी"
+    ],
+    "severity": "medium",
+    "weight": 0.2
+  },
+  {
+    "id": "urgency_sirf_10_minute",
+    "category": "urgency",
+    "phrase_variants": [
+      "sirf 10 minute",
+      "sirf das minute",
+      "sirf 10 min",
+      "सिर्फ 10 मिनट",
+      "सिर्फ़ 10 मिनट",
+      "सिर्फ दस मिनट",
+      "सिर्फ़ दस मिनट"
+    ],
+    "severity": "medium",
+    "weight": 0.2
+  },
+  {
+    "id": "urgency_turant",
+    "category": "urgency",
+    "phrase_variants": [
+      "turant",
+      "तुरंत",
+      "तुरन्त"
+    ],
+    "severity": "medium",
+    "weight": 0.2
+  },
+  {
+    "id": "urgency_aaj_hi",
+    "category": "urgency",
+    "phrase_variants": [
+      "aaj hi",
+      "आज ही"
+    ],
+    "severity": "medium",
+    "weight": 0.2
+  },
+  {
+    "id": "urgency_last_chance",
+    "category": "urgency",
+    "phrase_variants": [
+      "last chance",
+      "लास्ट चांस",
+      "आखिरी मौका"
+    ],
+    "severity": "medium",
+    "weight": 0.2
+  },
+  {
+    "id": "otp_bank_otp_bata_do",
+    "category": "otp_bank",
+    "phrase_variants": [
+      "otp bata do",
+      "otp batao",
+      "otp bata dijiye",
+      "otp share karo",
+      "otp",
+      "ओटीपी बता दो",
+      "ओटीपी बताओ",
+      "ओटीपी बता दीजिए",
+      "ओटीपी बताइए",
+      "ओटीपी शेयर करो",
+      "ओटीपी"
+    ],
+    "severity": "high",
+    "weight": 0.4
+  },
+  {
+    "id": "otp_bank_cvv_batao",
+    "category": "otp_bank",
+    "phrase_variants": [
+      "cvv batao",
+      "cvv bata do",
+      "cvv",
+      "सीवीवी बताओ",
+      "सीवीवी बता दो",
+      "सीवीवी"
+    ],
+    "severity": "high",
+    "weight": 0.4
+  },
+  {
+    "id": "otp_bank_account_number",
+    "category": "otp_bank",
+    "phrase_variants": [
+      "account number",
+      "account no",
+      "अकाउंट नंबर",
+      "अकाउंट नम्बर",
+      "खाता संख्या",
+      "खाता नंबर"
+    ],
+    "severity": "high",
+    "weight": 0.4
+  },
+  {
+    "id": "otp_bank_pin_share_karo",
+    "category": "otp_bank",
+    "phrase_variants": [
+      "pin share karo",
+      "pin batao",
+      "pin bata do",
+      "पिन शेयर करो",
+      "पिन बताओ",
+      "पिन बता दो",
+      "एटीएम पिन"
+    ],
+    "severity": "high",
+    "weight": 0.4
+  },
+  {
+    "id": "otp_bank_card_details",
+    "category": "otp_bank",
+    "phrase_variants": [
+      "card details",
+      "card ke details",
+      "card ke last digits",
+      "card number",
+      "कार्ड डिटेल्स",
+      "कार्ड की डिटेल्स",
+      "कार्ड के लास्ट डिजिट्स",
+      "कार्ड नंबर"
+    ],
+    "severity": "high",
+    "weight": 0.4
+  },
+  {
+    "id": "authority_ceo",
+    "category": "authority",
+    "phrase_variants": [
+      "main ceo bol raha hoon",
+      "ceo bol raha hoon",
+      "main ceo",
+      "मैं सीईओ बोल रहा हूँ",
+      "सीईओ बोल रहा हूँ",
+      "मैं सीईओ"
+    ],
+    "severity": "high",
+    "weight": 0.4
+  },
+  {
+    "id": "authority_police",
+    "category": "authority",
+    "phrase_variants": [
+      "police se bol raha hoon",
+      "police station se bol raha hoon",
+      "पुलिस से बोल रहा हूँ",
+      "पुलिस स्टेशन से बोल रहा हूँ",
+      "पुलिस स्टेशन"
+    ],
+    "severity": "high",
+    "weight": 0.4
+  },
+  {
+    "id": "authority_bank_manager",
+    "category": "authority",
+    "phrase_variants": [
+      "bank manager",
+      "बैंक मैनेजर"
+    ],
+    "severity": "high",
+    "weight": 0.4
+  },
+  {
+    "id": "authority_government_officer",
+    "category": "authority",
+    "phrase_variants": [
+      "government officer",
+      "govt officer",
+      "गवर्नमेंट ऑफिसर",
+      "सरकारी अधिकारी",
+      "सरकार से"
+    ],
+    "severity": "high",
+    "weight": 0.4
+  },
+  {
+    "id": "threats_account_block",
+    "category": "threats",
+    "phrase_variants": [
+      "account block ho jayega",
+      "account block ho gaya",
+      "account block",
+      "अकाउंट ब्लॉक हो जाएगा",
+      "अकाउंट ब्लॉक हो गया",
+      "अकाउंट ब्लॉक",
+      "खाता ब्लॉक"
+    ],
+    "severity": "high",
+    "weight": 0.4
+  },
+  {
+    "id": "threats_police_case",
+    "category": "threats",
+    "phrase_variants": [
+      "police case",
+      "पुलिस केस",
+      "पुलिस में केस",
+      "केस रजिस्टर"
+    ],
+    "severity": "high",
+    "weight": 0.4
+  },
+  {
+    "id": "threats_legal_action",
+    "category": "threats",
+    "phrase_variants": [
+      "legal action",
+      "लीगल एक्शन",
+      "कानूनी कार्रवाई"
+    ],
+    "severity": "high",
+    "weight": 0.4
+  },
+  {
+    "id": "threats_warrant",
+    "category": "threats",
+    "phrase_variants": [
+      "warrant",
+      "वारंट"
+    ],
+    "severity": "high",
+    "weight": 0.4
+  },
+  {
+    "id": "threats_paise_kat_jayenge",
+    "category": "threats",
+    "phrase_variants": [
+      "paise kat jayenge",
+      "paise kat jayega",
+      "पैसे कट जाएंगे",
+      "पैसे कट जाएँगे",
+      "पैसे कटेंगे"
+    ],
+    "severity": "high",
+    "weight": 0.4
+  },
+  {
+    "id": "emotional_papa_bimar",
+    "category": "emotional",
+    "phrase_variants": [
+      "papa bimar hain",
+      "papa bimar hai",
+      "पापा बीमार हैं",
+      "पापा बीमार है"
+    ],
+    "severity": "medium",
+    "weight": 0.2
+  },
+  {
+    "id": "emotional_mujhe_bachao",
+    "category": "emotional",
+    "phrase_variants": [
+      "mujhe bachao",
+      "मुझे बचाओ"
+    ],
+    "severity": "medium",
+    "weight": 0.2
+  },
+  {
+    "id": "emotional_kisi_ko_mat_batao",
+    "category": "emotional",
+    "phrase_variants": [
+      "kisi ko mat batao",
+      "kisi ko mat batana",
+      "kisi ko mat batayein",
+      "kisi ko abhi mat batana",
+      "kisi ko kuch mat batana",
+      "किसी को मत बताओ",
+      "किसी को मत बताना",
+      "किसी को मत बताइए",
+      "किसी को मत बताएं",
+      "किसी को अभी मत बताना",
+      "किसी को कुछ मत बताना",
+      "किसी को भी मत बताना"
+    ],
+    "severity": "medium",
+    "weight": 0.2
+  },
+  {
+    "id": "emotional_please_help",
+    "category": "emotional",
+    "phrase_variants": [
+      "please help",
+      "plz help",
+      "प्लीज़ हेल्प",
+      "प्लीज हेल्प",
+      "मदद करो",
+      "मदद कीजिए"
+    ],
+    "severity": "medium",
+    "weight": 0.2
+  },
+  {
+    "id": "cta_google_pay",
+    "category": "call_to_action",
+    "phrase_variants": [
+      "google pay se bhejo",
+      "google pay",
+      "gpay",
+      "गूगल पे से भेजो",
+      "गूगल पे",
+      "जीपे"
+    ],
+    "severity": "high",
+    "weight": 0.4
+  },
+  {
+    "id": "cta_upi_karo",
+    "category": "call_to_action",
+    "phrase_variants": [
+      "upi karo",
+      "upi se bhejo",
+      "upi",
+      "यूपीआई करो",
+      "यूपीआई से भेजो",
+      "यूपीआई"
+    ],
+    "severity": "high",
+    "weight": 0.4
+  },
+  {
+    "id": "cta_link_kholo",
+    "category": "call_to_action",
+    "phrase_variants": [
+      "link kholo",
+      "link khol kar",
+      "लिंक खोलो",
+      "लिंक खोल कर",
+      "लिंक खोलकर"
+    ],
+    "severity": "high",
+    "weight": 0.4
+  },
+  {
+    "id": "cta_team_viewer",
+    "category": "call_to_action",
+    "phrase_variants": [
+      "team viewer install karo",
+      "teamviewer",
+      "team viewer",
+      "screen share app install",
+      "screen share",
+      "remote access",
+      "टीम व्यूअर इंस्टॉल करो",
+      "टीमव्यूअर",
+      "टीम व्यूअर",
+      "स्क्रीन शेयर",
+      "रिमोट एक्सेस"
+    ],
+    "severity": "high",
+    "weight": 0.4
+  },
+  {
+    "id": "cta_anydesk",
+    "category": "call_to_action",
+    "phrase_variants": [
+      "anydesk",
+      "एनीडेस्क",
+      "एनी डेस्क"
+    ],
+    "severity": "high",
+    "weight": 0.4
+  }
+]
