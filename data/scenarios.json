@@ -1,0 +1,83 @@
+[
+  {
+    "category": "family_emergency",
+    "type": "scam",
+    "script_text": "Beta, main Papa bol raha hoon. Mera accident ho gaya hai aur main hospital mein admitted hoon. Doctor bol raha hai operation ke liye pachpan hazaar rupaye turant chahiye. Aap do ghante ke andar Paytm par paise bhej do. Kisi ko abhi mat batana, main theek hone ke baad khud sab ko bata dunga.",
+    "timbre_voice": "Deepak",
+    "audio_path": "samples/gc_scam_family_emergency_20261105_093045.wav",
+    "expected_label": "scam",
+    "created_at": "2026-11-05T09:30:47+05:30"
+  },
+  {
+    "category": "bank_fraud",
+    "type": "scam",
+    "script_text": "Namaste, main bank manager se bol raha hoon. Aapka account kuch suspicious transactions ki wajah se block ho gaya hai. Account chalu karne ke liye pachpan hazaar rupaye ki verification payment do ghante ke andar Paytm par karni hogi. Yeh bank ka urgent process hai, isliye delay mat kijiye. Aap apna OTP aur card ke last digits mujhe bata dijiye taaki main turant account unlock kar sakoon.",
+    "timbre_voice": "Deepak",
+    "audio_path": "samples/gc_scam_bank_fraud_20261105_093045.wav",
+    "expected_label": "scam",
+    "created_at": "2026-11-05T09:30:50+05:30"
+  },
+  {
+    "category": "executive",
+    "type": "scam",
+    "script_text": "Hello, main CEO bol raha hoon. Company ki ek confidential deal close karni hai aur mujhe aapki help chahiye. Aapko pachpan hazaar rupaye ki transfer do ghante tak Paytm par karni hai, invoice baad mein bhej dunga. Yeh baat company ke andar bhi kisi ko nahi batani hai. Main abhi meeting mein hoon, isliye sirf message par confirm kar dena.",
+    "timbre_voice": "Deepak",
+    "audio_path": "samples/gc_scam_executive_20261105_093045.wav",
+    "expected_label": "scam",
+    "created_at": "2026-11-05T09:30:53+05:30"
+  },
+  {
+    "category": "government_police",
+    "type": "scam",
+    "script_text": "Main police station se bol raha hoon. Aapke naam par ek case register ho gaya hai aur warrant nikalne wala hai. Case close karne ke liye pachpan hazaar rupaye ka fine do ghante tak Paytm par jama karna hoga. Agar payment nahi hui to team aapke ghar aaj hi pahunch jayegi. Abhi kisi wakil ya ghar walon ko mat batayein, warna case aur serious ho jayega.",
+    "timbre_voice": "Deepak",
+    "audio_path": "samples/gc_scam_government_police_20261105_093045.wav",
+    "expected_label": "scam",
+    "created_at": "2026-11-05T09:30:56+05:30"
+  },
+  {
+    "category": "tech_support",
+    "type": "scam",
+    "script_text": "Hello, main Microsoft ki technical support team se bol raha hoon. Aapke computer mein virus detect hua hai aur aapka bank data leak ho raha hai. System theek karne ke liye pachpan hazaar rupaye ka support plan do ghante ke andar Paytm se activate karna hoga. Main abhi aapko remote access ke liye screen share app install karne ko bolunga. Please laptop ke saamne baith jaiye aur koi window band mat kijiye.",
+    "timbre_voice": "Deepak",
+    "audio_path": "samples/gc_scam_tech_support_20261105_093045.wav",
+    "expected_label": "scam",
+    "created_at": "2026-11-05T09:30:59+05:30"
+  },
+  {
+    "category": "prize_refund",
+    "type": "scam",
+    "script_text": "Namaste, main company ke refund department se bol raha hoon. Aapka pachpan hazaar rupaye ka refund company ke system mein pending hai. Refund release karne ke liye do ghante ke andar Paytm par chhota processing fee dena hoga. Yeh fee aapko refund ke saath wapas mil jayegi. Aap bas link khol kar apna account number aur details verify kar dijiye, warna refund cancel ho jayega.",
+    "timbre_voice": "Deepak",
+    "audio_path": "samples/gc_scam_prize_refund_20261105_093045.wav",
+    "expected_label": "scam",
+    "created_at": "2026-11-05T09:31:01+05:30"
+  },
+  {
+    "category": "friend_dinner",
+    "type": "genuine",
+    "script_text": "Hi yaar, main Rohan bol raha hoon. Aaj shaam dinner ka plan banaya hai, Cafe Coffee Day mein aath baje. Tu free ho to aa jana, main table book kar dunga. Agar koi problem ho to message kar dena. See you, take care!",
+    "timbre_voice": "Nalini",
+    "audio_path": "samples/gc_genuine_friend_dinner_20261105_093045.wav",
+    "expected_label": "genuine",
+    "created_at": "2026-11-05T09:31:03+05:30"
+  },
+  {
+    "category": "college_exam_fee",
+    "type": "genuine",
+    "script_text": "Namaste, main Sharma sir bol raha hoon, college office se. Exam form ki last date is Friday hai aur fee ek hazaar do sau rupaye hai. Aap office timing mein aa kar fee jama kar sakte hain ya portal par online pay kar sakte hain. Payment ke baad receipt sambhal kar rakhein. Koi doubt ho to college ke official number par call karein.",
+    "timbre_voice": "Nalini",
+    "audio_path": "samples/gc_genuine_college_exam_fee_20261105_093045.wav",
+    "expected_label": "genuine",
+    "created_at": "2026-11-05T09:31:06+05:30"
+  },
+  {
+    "category": "relative_checkin",
+    "type": "genuine",
+    "script_text": "Hi, main Rakesh chacha bol raha hoon, bas aapka haal chaal puchne ke liye call kiya. Kaafi din se baat nahi hui, sab theek hai na? Ghar par sab log kaise hain? Weekend par hum log aapke ghar aa sakte hain agar aap free ho. Apna khayal rakhna, milte hain.",
+    "timbre_voice": "Nalini",
+    "audio_path": "samples/gc_genuine_relative_checkin_20261105_093045.wav",
+    "expected_label": "genuine",
+    "created_at": "2026-11-05T09:31:08+05:30"
+  }
+]
