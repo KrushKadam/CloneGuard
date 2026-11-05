@@ -1,0 +1,664 @@
+[
+  {
+    "run_id": "run_20261105_094154_3913",
+    "started_at": "2026-11-05T09:41:54+05:30",
+    "threshold": 0.55,
+    "scenario_count": 10,
+    "metrics": {
+      "scam_caught": "4/7",
+      "genuine_passed": "3/3",
+      "caution_count": 3,
+      "errors": 0,
+      "weakest": "tech_support (composite 49, distance 11)",
+      "weakest_category": "tech_support",
+      "weakest_composite": 49,
+      "weakest_distance": 11
+    },
+    "scenarios": [
+      {
+        "scenario_id": "sc01_family_emergency",
+        "category": "family_emergency",
+        "expected_label": "scam",
+        "hard_case": null,
+        "audio_path": "samples/gc_scam_family_emergency_20261105_093045.wav",
+        "composite": 50,
+        "band": "caution",
+        "status": "missed",
+        "distance": 10,
+        "best_cosine": 0.2752,
+        "hits": [
+          {
+            "id": "urgency_turant",
+            "category": "urgency",
+            "matched_phrase": "तुरंत",
+            "transcript_snippet": "...ैं हॉस्पिटल में एडमिटेड हूँ। डॉक्टर बोल रहा है, \"ऑपरेशन के लिए पचपन हज़ार रुपये तुरंत चाहिए। आप दो घंटे के अंदर पेटिन पर पैसे भेज दो।\" किसी को अभी मत बताना। मैं ठीक...",
+            "severity": "medium",
+            "weight": 0.2
+          },
+          {
+            "id": "emotional_kisi_ko_mat_batao",
+            "category": "emotional",
+            "matched_phrase": "किसी को अभी मत बताना",
+            "transcript_snippet": "...न के लिए पचपन हज़ार रुपये तुरंत चाहिए। आप दो घंटे के अंदर पेटिन पर पैसे भेज दो।\" किसी को अभी मत बताना। मैं ठीक होने के बाद खुद सबको बता दूंगा।",
+            "severity": "medium",
+            "weight": 0.2
+          }
+        ],
+        "error": null
+      },
+      {
+        "scenario_id": "sc02_bank_fraud",
+        "category": "bank_fraud",
+        "expected_label": "scam",
+        "hard_case": null,
+        "audio_path": "samples/gc_scam_bank_fraud_20261105_093045.wav",
+        "composite": 74,
+        "band": "high",
+        "status": "caught",
+        "distance": 0,
+        "best_cosine": 0.2894,
+        "hits": [
+          {
+            "id": "urgency_turant",
+            "category": "urgency",
+            "matched_phrase": "तुरंत",
+            "transcript_snippet": "...डिले मैट कीजिए, आप अपना ओटीपी और कार्ड के लास्ट डिजिट्स मुझे बता दीजिए ताकि मैं तुरंत अकाउंट अनलॉक कर सकूँ।",
+            "severity": "medium",
+            "weight": 0.2
+          },
+          {
+            "id": "otp_bank_otp_bata_do",
+            "category": "otp_bank",
+            "matched_phrase": "ओटीपी",
+            "transcript_snippet": "...ेटीएम पर करनी होगी। यह बैंक का अर्जेंट प्रोसेस है। इसलिए डिले मैट कीजिए, आप अपना ओटीपी और कार्ड के लास्ट डिजिट्स मुझे बता दीजिए ताकि मैं तुरंत अकाउंट अनलॉक कर सकूँ।",
+            "severity": "high",
+            "weight": 0.4
+          },
+          {
+            "id": "otp_bank_card_details",
+            "category": "otp_bank",
+            "matched_phrase": "कार्ड के लास्ट डिजिट्स",
+            "transcript_snippet": "...करनी होगी। यह बैंक का अर्जेंट प्रोसेस है। इसलिए डिले मैट कीजिए, आप अपना ओटीपी और कार्ड के लास्ट डिजिट्स मुझे बता दीजिए ताकि मैं तुरंत अकाउंट अनलॉक कर सकूँ।",
+            "severity": "high",
+            "weight": 0.4
+          },
+          {
+            "id": "authority_bank_manager",
+            "category": "authority",
+            "matched_phrase": "बैंक मैनेजर",
+            "transcript_snippet": "नमस्ते, मैं बैंक मैनेजर से बोल रहा हूँ, आपका अकाउंट कुछ सस्पिशियस ट्रांजैक्शंस की वजह से ब्लॉक हो गया...",
+            "severity": "high",
+            "weight": 0.4
+          }
+        ],
+        "error": null
+      },
+      {
+        "scenario_id": "sc03_executive",
+        "category": "executive",
+        "expected_label": "scam",
+        "hard_case": null,
+        "audio_path": "samples/gc_scam_executive_20261105_093045.wav",
+        "composite": 50,
+        "band": "caution",
+        "status": "missed",
+        "distance": 10,
+        "best_cosine": null,
+        "hits": [
+          {
+            "id": "authority_ceo",
+            "category": "authority",
+            "matched_phrase": "मैं सीईओ बोल रहा हूँ",
+            "transcript_snippet": "हैलो, मैं सीईओ बोल रहा हूँ, कंपनी की एक कॉन्फिडेंशियल डील क्लोज करनी है और मुझे आपकी हेल्प चाहिए। आपको पच...",
+            "severity": "high",
+            "weight": 0.4
+          }
+        ],
+        "error": null
+      },
+      {
+        "scenario_id": "sc04_government_police",
+        "category": "government_police",
+        "expected_label": "scam",
+        "hard_case": null,
+        "audio_path": "samples/gc_scam_government_police_20261105_093045.wav",
+        "composite": 76,
+        "band": "high",
+        "status": "caught",
+        "distance": 0,
+        "best_cosine": 0.2588,
+        "hits": [
+          {
+            "id": "urgency_aaj_hi",
+            "category": "urgency",
+            "matched_phrase": "आज ही",
+            "transcript_snippet": "...ये का फाइन दो घंटे तक पेट पर जमा करना होगा। अगर पेमेंट नहीं हुई, तो टीम आपके घर आज ही पहुँच जाएगी। अभी किसी वाक़िल या घर वालों को मत बताएँ, वरना केस और सीरियस हो जाए...",
+            "severity": "medium",
+            "weight": 0.2
+          },
+          {
+            "id": "authority_police",
+            "category": "authority",
+            "matched_phrase": "पुलिस स्टेशन से बोल रहा हूँ",
+            "transcript_snippet": "मैं पुलिस स्टेशन से बोल रहा हूँ। आपके नाम पर एक केस रजिस्टर हो गया है और वारंट निकालने वाला है। केस क्लोज़ करने...",
+            "severity": "high",
+            "weight": 0.4
+          },
+          {
+            "id": "threats_police_case",
+            "category": "threats",
+            "matched_phrase": "केस रजिस्टर",
+            "transcript_snippet": "मैं पुलिस स्टेशन से बोल रहा हूँ। आपके नाम पर एक केस रजिस्टर हो गया है और वारंट निकालने वाला है। केस क्लोज़ करने के लिए पचपन हज़ार रुपये का...",
+            "severity": "high",
+            "weight": 0.4
+          },
+          {
+            "id": "threats_warrant",
+            "category": "threats",
+            "matched_phrase": "वारंट",
+            "transcript_snippet": "मैं पुलिस स्टेशन से बोल रहा हूँ। आपके नाम पर एक केस रजिस्टर हो गया है और वारंट निकालने वाला है। केस क्लोज़ करने के लिए पचपन हज़ार रुपये का फाइन दो घंटे तक पेट...",
+            "severity": "high",
+            "weight": 0.4
+          }
+        ],
+        "error": null
+      },
+      {
+        "scenario_id": "sc05_tech_support",
+        "category": "tech_support",
+        "expected_label": "scam",
+        "hard_case": null,
+        "audio_path": "samples/gc_scam_tech_support_20261105_093045.wav",
+        "composite": 49,
+        "band": "caution",
+        "status": "missed",
+        "distance": 11,
+        "best_cosine": 0.2913,
+        "hits": [
+          {
+            "id": "cta_team_viewer",
+            "category": "call_to_action",
+            "matched_phrase": "स्क्रीन शेयर",
+            "transcript_snippet": "...ो घंटे के अंदर पेटीएम से एक्टिवेट करना होगा। मैं न अभी आपको रिमोट एक्सेस के लिए स्क्रीन शेयर ऐप इंस्टॉल करने को बोलूँगा। प्लीज़ लैपटॉप के सामने बैठ जाइए और कोई विंडो बैंड म...",
+            "severity": "high",
+            "weight": 0.4
+          }
+        ],
+        "error": null
+      },
+      {
+        "scenario_id": "sc06_prize_refund",
+        "category": "prize_refund",
+        "expected_label": "scam",
+        "hard_case": null,
+        "audio_path": "samples/gc_scam_prize_refund_20261105_093045.wav",
+        "composite": 76,
+        "band": "high",
+        "status": "caught",
+        "distance": 0,
+        "best_cosine": 0.2665,
+        "hits": [
+          {
+            "id": "otp_bank_account_number",
+            "category": "otp_bank",
+            "matched_phrase": "अकाउंट नंबर",
+            "transcript_snippet": "...सिंग फी देना होगा, यह फी आपको रिफंड के साथ वापस मिल जाएगी। आप बस लिंक खोलकर अपना अकाउंट नंबर और डिटेल्स वेरीफाई कर दीजिए वरना रिफंड कैंसिल हो जाएगा।",
+            "severity": "high",
+            "weight": 0.4
+          },
+          {
+            "id": "cta_link_kholo",
+            "category": "call_to_action",
+            "matched_phrase": "लिंक खोलकर",
+            "transcript_snippet": "...म पर छोटा प्रोसेसिंग फी देना होगा, यह फी आपको रिफंड के साथ वापस मिल जाएगी। आप बस लिंक खोलकर अपना अकाउंट नंबर और डिटेल्स वेरीफाई कर दीजिए वरना रिफंड कैंसिल हो जाएगा।",
+            "severity": "high",
+            "weight": 0.4
+          }
+        ],
+        "error": null
+      },
+      {
+        "scenario_id": "sc07_friend_dinner",
+        "category": "friend_dinner",
+        "expected_label": "genuine",
+        "hard_case": null,
+        "audio_path": "samples/gc_genuine_friend_dinner_20261105_093045.wav",
+        "composite": 0,
+        "band": "low",
+        "status": "passed",
+        "distance": 0,
+        "best_cosine": 0.8263,
+        "hits": [],
+        "error": null
+      },
+      {
+        "scenario_id": "sc08_college_exam_fee",
+        "category": "college_exam_fee",
+        "expected_label": "genuine",
+        "hard_case": "genuine mentioning money",
+        "audio_path": "samples/gc_genuine_college_exam_fee_20261105_093045.wav",
+        "composite": 0,
+        "band": "low",
+        "status": "passed",
+        "distance": 0,
+        "best_cosine": 0.8304,
+        "hits": [],
+        "error": null
+      },
+      {
+        "scenario_id": "sc09_relative_checkin",
+        "category": "relative_checkin",
+        "expected_label": "genuine",
+        "hard_case": null,
+        "audio_path": "samples/gc_genuine_relative_checkin_20261105_093045.wav",
+        "composite": 0,
+        "band": "low",
+        "status": "passed",
+        "distance": 0,
+        "best_cosine": 0.8219,
+        "hits": [],
+        "error": null
+      },
+      {
+        "scenario_id": "sc10_bank_refund_no_urgency",
+        "category": "bank_refund_no_urgency",
+        "expected_label": "scam",
+        "hard_case": "scam without urgency words",
+        "audio_path": "samples/gc_scam_no_urgency_20261105_094148.wav",
+        "composite": 71,
+        "band": "high",
+        "status": "caught",
+        "distance": 0,
+        "best_cosine": 0.3142,
+        "hits": [
+          {
+            "id": "otp_bank_account_number",
+            "category": "otp_bank",
+            "matched_phrase": "अकाउंट नंबर",
+            "transcript_snippet": "...ूँ, आपके अकाउंट में एक रिफंड पेंडिंग है जो हम आपको वापस करना चाहते हैं। आप अपना अकाउंट नंबर वेरीफाई कर लीजिए, उसके बाद मैं आपको लिंक खोलकर डिटेल्स कन्फर्म करने को कहूँगा।...",
+            "severity": "high",
+            "weight": 0.4
+          },
+          {
+            "id": "cta_link_kholo",
+            "category": "call_to_action",
+            "matched_phrase": "लिंक खोलकर",
+            "transcript_snippet": "...को वापस करना चाहते हैं। आप अपना अकाउंट नंबर वेरीफाई कर लीजिए, उसके बाद मैं आपको लिंक खोलकर डिटेल्स कन्फर्म करने को कहूँगा। आप अपने समय से ये कर लीजिए। मैं यहीं अवेलेबल हू...",
+            "severity": "high",
+            "weight": 0.4
+          }
+        ],
+        "error": null
+      }
+    ],
+    "sweep": [
+      {
+        "threshold": 0.45,
+        "scam_caught": "4/7",
+        "genuine_passed": "3/3",
+        "caution_count": 3,
+        "errors": 0
+      },
+      {
+        "threshold": 0.5,
+        "scam_caught": "4/7",
+        "genuine_passed": "3/3",
+        "caution_count": 3,
+        "errors": 0
+      },
+      {
+        "threshold": 0.55,
+        "scam_caught": "4/7",
+        "genuine_passed": "3/3",
+        "caution_count": 3,
+        "errors": 0
+      },
+      {
+        "threshold": 0.6,
+        "scam_caught": "4/7",
+        "genuine_passed": "3/3",
+        "caution_count": 3,
+        "errors": 0
+      },
+      {
+        "threshold": 0.65,
+        "scam_caught": "4/7",
+        "genuine_passed": "3/3",
+        "caution_count": 3,
+        "errors": 0
+      }
+    ],
+    "honesty_line": "Calibration against builder-written scripts, not independent accuracy."
+  },
+  {
+    "run_id": "run_20261105_094401_9ca1",
+    "started_at": "2026-11-05T09:44:01+05:30",
+    "threshold": 0.55,
+    "scenario_count": 10,
+    "metrics": {
+      "scam_caught": "4/7",
+      "genuine_passed": "3/3",
+      "caution_count": 3,
+      "errors": 0,
+      "weakest": "tech_support (composite 49, distance 11)",
+      "weakest_category": "tech_support",
+      "weakest_composite": 49,
+      "weakest_distance": 11
+    },
+    "scenarios": [
+      {
+        "scenario_id": "sc01_family_emergency",
+        "category": "family_emergency",
+        "expected_label": "scam",
+        "hard_case": null,
+        "audio_path": "samples/gc_scam_family_emergency_20261105_093045.wav",
+        "composite": 50,
+        "band": "caution",
+        "status": "missed",
+        "distance": 10,
+        "best_cosine": 0.2752,
+        "hits": [
+          {
+            "id": "urgency_turant",
+            "category": "urgency",
+            "matched_phrase": "तुरंत",
+            "transcript_snippet": "...ैं हॉस्पिटल में एडमिटेड हूँ। डॉक्टर बोल रहा है, \"ऑपरेशन के लिए पचपन हज़ार रुपये तुरंत चाहिए। आप दो घंटे के अंदर पेटिन पर पैसे भेज दो।\" किसी को अभी मत बताना। मैं ठीक...",
+            "severity": "medium",
+            "weight": 0.2
+          },
+          {
+            "id": "emotional_kisi_ko_mat_batao",
+            "category": "emotional",
+            "matched_phrase": "किसी को अभी मत बताना",
+            "transcript_snippet": "...न के लिए पचपन हज़ार रुपये तुरंत चाहिए। आप दो घंटे के अंदर पेटिन पर पैसे भेज दो।\" किसी को अभी मत बताना। मैं ठीक होने के बाद खुद सबको बता दूंगा।",
+            "severity": "medium",
+            "weight": 0.2
+          }
+        ],
+        "error": null
+      },
+      {
+        "scenario_id": "sc02_bank_fraud",
+        "category": "bank_fraud",
+        "expected_label": "scam",
+        "hard_case": null,
+        "audio_path": "samples/gc_scam_bank_fraud_20261105_093045.wav",
+        "composite": 74,
+        "band": "high",
+        "status": "caught",
+        "distance": 0,
+        "best_cosine": 0.2894,
+        "hits": [
+          {
+            "id": "urgency_turant",
+            "category": "urgency",
+            "matched_phrase": "तुरंत",
+            "transcript_snippet": "...डिले मैट कीजिए, आप अपना ओटीपी और कार्ड के लास्ट डिजिट्स मुझे बता दीजिए ताकि मैं तुरंत अकाउंट अनलॉक कर सकूँ।",
+            "severity": "medium",
+            "weight": 0.2
+          },
+          {
+            "id": "otp_bank_otp_bata_do",
+            "category": "otp_bank",
+            "matched_phrase": "ओटीपी",
+            "transcript_snippet": "...ेटीएम पर करनी होगी। यह बैंक का अर्जेंट प्रोसेस है। इसलिए डिले मैट कीजिए, आप अपना ओटीपी और कार्ड के लास्ट डिजिट्स मुझे बता दीजिए ताकि मैं तुरंत अकाउंट अनलॉक कर सकूँ।",
+            "severity": "high",
+            "weight": 0.4
+          },
+          {
+            "id": "otp_bank_card_details",
+            "category": "otp_bank",
+            "matched_phrase": "कार्ड के लास्ट डिजिट्स",
+            "transcript_snippet": "...करनी होगी। यह बैंक का अर्जेंट प्रोसेस है। इसलिए डिले मैट कीजिए, आप अपना ओटीपी और कार्ड के लास्ट डिजिट्स मुझे बता दीजिए ताकि मैं तुरंत अकाउंट अनलॉक कर सकूँ।",
+            "severity": "high",
+            "weight": 0.4
+          },
+          {
+            "id": "authority_bank_manager",
+            "category": "authority",
+            "matched_phrase": "बैंक मैनेजर",
+            "transcript_snippet": "नमस्ते, मैं बैंक मैनेजर से बोल रहा हूँ, आपका अकाउंट कुछ सस्पिशियस ट्रांजैक्शंस की वजह से ब्लॉक हो गया...",
+            "severity": "high",
+            "weight": 0.4
+          }
+        ],
+        "error": null
+      },
+      {
+        "scenario_id": "sc03_executive",
+        "category": "executive",
+        "expected_label": "scam",
+        "hard_case": null,
+        "audio_path": "samples/gc_scam_executive_20261105_093045.wav",
+        "composite": 50,
+        "band": "caution",
+        "status": "missed",
+        "distance": 10,
+        "best_cosine": null,
+        "hits": [
+          {
+            "id": "authority_ceo",
+            "category": "authority",
+            "matched_phrase": "मैं सीईओ बोल रहा हूँ",
+            "transcript_snippet": "हैलो, मैं सीईओ बोल रहा हूँ, कंपनी की एक कॉन्फिडेंशियल डील क्लोज करनी है और मुझे आपकी हेल्प चाहिए। आपको पच...",
+            "severity": "high",
+            "weight": 0.4
+          }
+        ],
+        "error": null
+      },
+      {
+        "scenario_id": "sc04_government_police",
+        "category": "government_police",
+        "expected_label": "scam",
+        "hard_case": null,
+        "audio_path": "samples/gc_scam_government_police_20261105_093045.wav",
+        "composite": 76,
+        "band": "high",
+        "status": "caught",
+        "distance": 0,
+        "best_cosine": 0.2588,
+        "hits": [
+          {
+            "id": "urgency_aaj_hi",
+            "category": "urgency",
+            "matched_phrase": "आज ही",
+            "transcript_snippet": "...ये का फाइन दो घंटे तक पेट पर जमा करना होगा। अगर पेमेंट नहीं हुई, तो टीम आपके घर आज ही पहुँच जाएगी। अभी किसी वाक़िल या घर वालों को मत बताएँ, वरना केस और सीरियस हो जाए...",
+            "severity": "medium",
+            "weight": 0.2
+          },
+          {
+            "id": "authority_police",
+            "category": "authority",
+            "matched_phrase": "पुलिस स्टेशन से बोल रहा हूँ",
+            "transcript_snippet": "मैं पुलिस स्टेशन से बोल रहा हूँ। आपके नाम पर एक केस रजिस्टर हो गया है और वारंट निकालने वाला है। केस क्लोज़ करने...",
+            "severity": "high",
+            "weight": 0.4
+          },
+          {
+            "id": "threats_police_case",
+            "category": "threats",
+            "matched_phrase": "केस रजिस्टर",
+            "transcript_snippet": "मैं पुलिस स्टेशन से बोल रहा हूँ। आपके नाम पर एक केस रजिस्टर हो गया है और वारंट निकालने वाला है। केस क्लोज़ करने के लिए पचपन हज़ार रुपये का...",
+            "severity": "high",
+            "weight": 0.4
+          },
+          {
+            "id": "threats_warrant",
+            "category": "threats",
+            "matched_phrase": "वारंट",
+            "transcript_snippet": "मैं पुलिस स्टेशन से बोल रहा हूँ। आपके नाम पर एक केस रजिस्टर हो गया है और वारंट निकालने वाला है। केस क्लोज़ करने के लिए पचपन हज़ार रुपये का फाइन दो घंटे तक पेट...",
+            "severity": "high",
+            "weight": 0.4
+          }
+        ],
+        "error": null
+      },
+      {
+        "scenario_id": "sc05_tech_support",
+        "category": "tech_support",
+        "expected_label": "scam",
+        "hard_case": null,
+        "audio_path": "samples/gc_scam_tech_support_20261105_093045.wav",
+        "composite": 49,
+        "band": "caution",
+        "status": "missed",
+        "distance": 11,
+        "best_cosine": 0.2913,
+        "hits": [
+          {
+            "id": "cta_team_viewer",
+            "category": "call_to_action",
+            "matched_phrase": "स्क्रीन शेयर",
+            "transcript_snippet": "...ो घंटे के अंदर पेटीएम से एक्टिवेट करना होगा। मैं न अभी आपको रिमोट एक्सेस के लिए स्क्रीन शेयर ऐप इंस्टॉल करने को बोलूँगा। प्लीज़ लैपटॉप के सामने बैठ जाइए और कोई विंडो बैंड म...",
+            "severity": "high",
+            "weight": 0.4
+          }
+        ],
+        "error": null
+      },
+      {
+        "scenario_id": "sc06_prize_refund",
+        "category": "prize_refund",
+        "expected_label": "scam",
+        "hard_case": null,
+        "audio_path": "samples/gc_scam_prize_refund_20261105_093045.wav",
+        "composite": 76,
+        "band": "high",
+        "status": "caught",
+        "distance": 0,
+        "best_cosine": 0.2665,
+        "hits": [
+          {
+            "id": "otp_bank_account_number",
+            "category": "otp_bank",
+            "matched_phrase": "अकाउंट नंबर",
+            "transcript_snippet": "...सिंग फी देना होगा, यह फी आपको रिफंड के साथ वापस मिल जाएगी। आप बस लिंक खोलकर अपना अकाउंट नंबर और डिटेल्स वेरीफाई कर दीजिए वरना रिफंड कैंसिल हो जाएगा।",
+            "severity": "high",
+            "weight": 0.4
+          },
+          {
+            "id": "cta_link_kholo",
+            "category": "call_to_action",
+            "matched_phrase": "लिंक खोलकर",
+            "transcript_snippet": "...म पर छोटा प्रोसेसिंग फी देना होगा, यह फी आपको रिफंड के साथ वापस मिल जाएगी। आप बस लिंक खोलकर अपना अकाउंट नंबर और डिटेल्स वेरीफाई कर दीजिए वरना रिफंड कैंसिल हो जाएगा।",
+            "severity": "high",
+            "weight": 0.4
+          }
+        ],
+        "error": null
+      },
+      {
+        "scenario_id": "sc07_friend_dinner",
+        "category": "friend_dinner",
+        "expected_label": "genuine",
+        "hard_case": null,
+        "audio_path": "samples/gc_genuine_friend_dinner_20261105_093045.wav",
+        "composite": 0,
+        "band": "low",
+        "status": "passed",
+        "distance": 0,
+        "best_cosine": 0.8263,
+        "hits": [],
+        "error": null
+      },
+      {
+        "scenario_id": "sc08_college_exam_fee",
+        "category": "college_exam_fee",
+        "expected_label": "genuine",
+        "hard_case": "genuine mentioning money",
+        "audio_path": "samples/gc_genuine_college_exam_fee_20261105_093045.wav",
+        "composite": 0,
+        "band": "low",
+        "status": "passed",
+        "distance": 0,
+        "best_cosine": 0.8304,
+        "hits": [],
+        "error": null
+      },
+      {
+        "scenario_id": "sc09_relative_checkin",
+        "category": "relative_checkin",
+        "expected_label": "genuine",
+        "hard_case": null,
+        "audio_path": "samples/gc_genuine_relative_checkin_20261105_093045.wav",
+        "composite": 0,
+        "band": "low",
+        "status": "passed",
+        "distance": 0,
+        "best_cosine": 0.8219,
+        "hits": [],
+        "error": null
+      },
+      {
+        "scenario_id": "sc10_bank_refund_no_urgency",
+        "category": "bank_refund_no_urgency",
+        "expected_label": "scam",
+        "hard_case": "scam without urgency words",
+        "audio_path": "samples/gc_scam_no_urgency_20261105_094148.wav",
+        "composite": 71,
+        "band": "high",
+        "status": "caught",
+        "distance": 0,
+        "best_cosine": 0.3142,
+        "hits": [
+          {
+            "id": "otp_bank_account_number",
+            "category": "otp_bank",
+            "matched_phrase": "अकाउंट नंबर",
+            "transcript_snippet": "...ूँ, आपके अकाउंट में एक रिफंड पेंडिंग है जो हम आपको वापस करना चाहते हैं। आप अपना अकाउंट नंबर वेरीफाई कर लीजिए, उसके बाद मैं आपको लिंक खोलकर डिटेल्स कन्फर्म करने को कहूँगा।...",
+            "severity": "high",
+            "weight": 0.4
+          },
+          {
+            "id": "cta_link_kholo",
+            "category": "call_to_action",
+            "matched_phrase": "लिंक खोलकर",
+            "transcript_snippet": "...को वापस करना चाहते हैं। आप अपना अकाउंट नंबर वेरीफाई कर लीजिए, उसके बाद मैं आपको लिंक खोलकर डिटेल्स कन्फर्म करने को कहूँगा। आप अपने समय से ये कर लीजिए। मैं यहीं अवेलेबल हू...",
+            "severity": "high",
+            "weight": 0.4
+          }
+        ],
+        "error": null
+      }
+    ],
+    "sweep": [
+      {
+        "threshold": 0.45,
+        "scam_caught": "4/7",
+        "genuine_passed": "3/3",
+        "caution_count": 3,
+        "errors": 0
+      },
+      {
+        "threshold": 0.5,
+        "scam_caught": "4/7",
+        "genuine_passed": "3/3",
+        "caution_count": 3,
+        "errors": 0
+      },
+      {
+        "threshold": 0.55,
+        "scam_caught": "4/7",
+        "genuine_passed": "3/3",
+        "caution_count": 3,
+        "errors": 0
+      },
+      {
+        "threshold": 0.6,
+        "scam_caught": "4/7",
+        "genuine_passed": "3/3",
+        "caution_count": 3,
+        "errors": 0
+      },
+      {
+        "threshold": 0.65,
+        "scam_caught": "4/7",
+        "genuine_passed": "3/3",
+        "caution_count": 3,
+        "errors": 0
+      }
+    ],
+    "honesty_line": "Calibration against builder-written scripts, not independent accuracy."
+  }
+]

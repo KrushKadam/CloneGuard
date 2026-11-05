@@ -69,7 +69,8 @@
     "timbre_voice": "Nalini",
     "audio_path": "samples/gc_genuine_college_exam_fee_20261105_093045.wav",
     "expected_label": "genuine",
-    "created_at": "2026-11-05T09:31:06+05:30"
+    "created_at": "2026-11-05T09:31:06+05:30",
+    "hard_case": "genuine mentioning money"
   },
   {
     "category": "relative_checkin",
@@ -79,5 +80,15 @@
     "audio_path": "samples/gc_genuine_relative_checkin_20261105_093045.wav",
     "expected_label": "genuine",
     "created_at": "2026-11-05T09:31:08+05:30"
+  },
+  {
+    "category": "bank_refund_no_urgency",
+    "type": "scam",
+    "script_text": "Namaste ji, main bank ke refund department se baat kar raha hoon. Aapke account mein ek refund pending hai jo hum aapko wapas karna chahte hain. Aap apna account number verify kar lijiye, uske baad main aapko link khol kar details confirm karne ko kahunga. Aap apne samay se yeh kar lijiye, main yahin available hoon. Koi bhi sawaal ho to mujhe bata dijiye.",
+    "timbre_voice": "Deepak",
+    "audio_path": "samples/gc_scam_no_urgency_20261105_094148.wav",
+    "expected_label": "scam",
+    "created_at": "2026-11-05T09:41:51+05:30",
+    "hard_case": "scam without urgency words"
   }
 ]
