@@ -1,18 +1,881 @@
-from gnani import text_to_speech, speech_to_text
+"""CloneGuard — Streamlit interface.
 
-print("========== GNANI VOICE APP ==========")
-print("1 = I type text   -> Timbre speaks it (saves reply.wav)")
-print("2 = I give a file -> Prisma transcribes it")
-choice = input("Choose 1 or 2: ").strip()
+Start it from the project root:
 
-if choice == "1":
-    text = input("Type anything: ").strip()
-    path = text_to_speech(text)
-    print("DONE. Audio saved as:", path)
+    streamlit run app.py
 
-elif choice == "2":
-    file = input("Path of audio file: ").strip()
-    print("TEXT:", speech_to_text(file))
+The interface runs locally on this machine. The analysis (transcription,
+voice fingerprints, text to speech) runs on Gnani's cloud APIs, so the app
+needs an internet connection. A check on an audio file that is already cached
+makes no API calls.
+"""
 
-else:
-    print("Pick 1 or 2 only.")
+import datetime as dt
+import glob
+import json
+import os
+import re
+import sys
+import tempfile
+import wave
+
+import requests
+import streamlit as st
+
+ROOT = os.path.dirname(os.path.abspath(__file__))
+if ROOT not in sys.path:
+    sys.path.insert(0, ROOT)
+
+import config
+import gnani
+from engine import layer1 as layer1_mod
+from engine import pipeline
+from engine import score as score_mod
+
+TEMP_DIR = os.path.join(tempfile.gettempdir(), "cloneguard_ui")
+
+PAGES = [
+    "Check a call",
+    "Spoken verdict",
+    "Enroll a voice",
+    "Self-test",
+    "Incident log",
+]
+
+VERDICT_VOICES = ["Nalini", "Deepak"]
+
+TARGET_MARK = "target"
+
+LIMITATIONS = [
+    "A perfect clone of the enrolled voice passes the voice match. A match is "
+    "a weak signal, not proof that the audio is genuine.",
+    "A mismatch is not proof of synthetic audio. Layer 1 flags an identity "
+    "mismatch, and a human impersonator produces the same flag.",
+    "The analysis runs on Gnani's cloud APIs. Audio leaves this machine and "
+    "the app needs an internet connection.",
+    "\"No patterns matched\" means the phrase list did not match. It does not "
+    "mean the call is safe.",
+]
+
+
+# ---------------------------------------------------------------------------
+# Small helpers
+# ---------------------------------------------------------------------------
+
+def api_key_present():
+    return bool((os.environ.get("GNANI_API_KEY") or "").strip())
+
+
+def temp_path(suffix=".wav"):
+    os.makedirs(TEMP_DIR, exist_ok=True)
+    handle, path = tempfile.mkstemp(prefix="cg_ui_", suffix=suffix, dir=TEMP_DIR)
+    os.close(handle)
+    return path
+
+
+def readable_error(exc):
+    """Turn an exception into the short message style from the docs."""
+    text = str(exc).strip() or exc.__class__.__name__
+    low = text.lower()
+
+    if isinstance(exc, FileNotFoundError):
+        return "That audio file could not be found. Pick it again."
+    if isinstance(exc, ValueError) and ("empty" in low or "directory" in low):
+        return "That file is empty or not readable audio. Upload a WAV."
+    if "gnani_api_key" in low:
+        return "Set the environment variable GNANI_API_KEY and restart the app."
+    if isinstance(exc, requests.exceptions.Timeout) or "timed out" in low or "timeout" in low:
+        return "The request took too long and was stopped. Try again in a moment."
+    if isinstance(exc, requests.exceptions.ConnectionError) or any(
+        word in low
+        for word in (
+            "connection",
+            "max retries",
+            "getaddrinfo",
+            "name or service",
+            "cannot reach",
+            "ssl",
+            "proxy",
+        )
+    ):
+        return "Cannot reach Gnani. Check your connection and try again."
+    if (
+        "401" in text
+        or "403" in text
+        or "unauthorized" in low
+        or "forbidden" in low
+        or "api key" in low
+    ):
+        return "API key rejected. Check GNANI_API_KEY."
+    if "429" in text or "rate limit" in low or "quota" in low or "credit" in low:
+        return "Credit limit reached or rate limited. Check app.gnani.ai, Usage page."
+    code = re.search(r"\b(5\d\d)\b", text)
+    if code:
+        return "Gnani had a problem (code %s). Try again in a moment." % code.group(1)
+    return "The request could not finish: " + (text[:240] + ("..." if len(text) > 240 else ""))
+
+
+def save_upload(uploaded):
+    """Write an uploaded WAV to a temp file after a header check."""
+    data = uploaded.getvalue() if hasattr(uploaded, "getvalue") else uploaded.read()
+    if not data:
+        raise ValueError("audio file is empty")
+    path = temp_path()
+    with open(path, "wb") as handle:
+        handle.write(data)
+    try:
+        with wave.open(path, "rb") as reader:
+            reader.getnframes()
+    except Exception:
+        try:
+            os.remove(path)
+        except OSError:
+            pass
+        raise ValueError("audio file is empty or not readable audio")
+    return path
+
+
+def sample_files():
+    return sorted(
+        os.path.basename(path)
+        for path in glob.glob(os.path.join(config.SAMPLES_DIR, "gc_*.wav"))
+    )
+
+
+def short(text, width=160):
+    value = " ".join(str(text or "").split())
+    if len(value) <= width:
+        return value
+    return value[: width - 3].rstrip() + "..."
+
+
+def parse_time(value):
+    if not value:
+        return None
+    try:
+        return dt.datetime.fromisoformat(str(value))
+    except (TypeError, ValueError):
+        return None
+
+
+def show_time(value):
+    parsed = parse_time(value)
+    if parsed is None:
+        return str(value or "")
+    return parsed.strftime("%d %b %Y, %H:%M")
+
+
+def band_label(band):
+    return {"low": "Low risk", "caution": "Caution", "high": "High risk"}.get(
+        band, str(band or "-")
+    )
+
+
+def ordinal_percent(value):
+    return "-" if value is None else "%.4f" % float(value)
+
+
+# ---------------------------------------------------------------------------
+# Shared chrome
+# ---------------------------------------------------------------------------
+
+def sidebar():
+    st.sidebar.title("CloneGuard")
+    st.sidebar.caption("Identity and language risk check for a supplied call recording.")
+
+    page = st.sidebar.radio("Section", PAGES, key="page")
+
+    st.sidebar.divider()
+    try:
+        enrolled = len(layer1_mod.load_voiceprints())
+    except Exception:
+        enrolled = 0
+    st.sidebar.write("Voiceprints enrolled: **%d**" % enrolled)
+    if api_key_present():
+        st.sidebar.success("GNANI_API_KEY found")
+    else:
+        st.sidebar.error("GNANI_API_KEY missing")
+    st.sidebar.caption("Interface local, analysis on Gnani's cloud APIs.")
+    return page
+
+
+def render_footer():
+    st.divider()
+    st.caption(
+        "Interface runs locally on this machine (localhost). Analysis runs on "
+        "Gnani's cloud APIs and needs an internet connection."
+    )
+    with st.expander("Limitations"):
+        for item in LIMITATIONS:
+            st.markdown("- " + item)
+        st.caption(
+            "The verdict is a risk signal with evidence, not an automatic fraud "
+            "determination. A human makes the final decision."
+        )
+
+
+# ---------------------------------------------------------------------------
+# Section 1: check a call
+# ---------------------------------------------------------------------------
+
+def layer1_panel(result):
+    st.markdown("#### Layer 1: voiceprint comparison")
+    layer1 = result.get("layer1") or {}
+    comparisons = layer1.get("comparisons") or []
+    threshold = layer1.get("threshold", config.THRESHOLD)
+
+    st.caption(
+        "Cosine similarity is a 0-to-1 score where 1 means the two voices are "
+        "identical. The cut-off (threshold) is %.2f." % float(threshold)
+    )
+
+    if comparisons:
+        rows = []
+        for row in comparisons:
+            rows.append(
+                {
+                    "Voiceprint": row.get("name") or "-",
+                    "Role": row.get("role") or "-",
+                    "Cosine": ordinal_percent(row.get("cosine")),
+                    "Threshold": "%.2f" % float(row.get("threshold", threshold)),
+                    "Result": row.get("verdict") or "-",
+                    "Target": TARGET_MARK if row.get("target") else "",
+                }
+            )
+        st.dataframe(rows, hide_index=True)
+        st.caption(
+            "The row marked target is the voiceprint the identity claim resolved to."
+        )
+    else:
+        st.info(
+            "No voiceprints are enrolled, so Layer 1 was not scored. Enroll a "
+            "voice in the Enroll section."
+        )
+
+    claim = result.get("claim") or {}
+    note = claim.get("note")
+    if note:
+        st.markdown("**Claim:** " + note)
+    st.markdown("**Layer 1 result:** " + str(layer1.get("label") or "-"))
+
+
+def layer2_panel(result):
+    st.markdown("#### Layer 2: Hinglish scam-pattern scan")
+    hits = (result.get("layer2") or {}).get("hits") or []
+
+    if hits:
+        rows = []
+        for hit in hits:
+            rows.append(
+                {
+                    "Category": hit.get("category") or "-",
+                    "Matched phrase": hit.get("matched_phrase") or "-",
+                    "Snippet": hit.get("transcript_snippet") or "",
+                    "Severity": hit.get("severity") or "-",
+                    "Weight": "%.2f" % float(hit.get("weight") or 0.0),
+                }
+            )
+        st.dataframe(rows, hide_index=True)
+    else:
+        st.info("No patterns matched — this does not mean the call is safe.")
+
+
+def composite_panel(result):
+    st.markdown("#### Composite result")
+    composite = result.get("composite")
+    band = result.get("band")
+    layer1 = result.get("layer1") or {}
+    hits = (result.get("layer2") or {}).get("hits") or []
+
+    left, middle, right = st.columns(3)
+    left.metric("Composite risk", "%s / 100" % composite)
+    middle.metric("Band", band_label(band))
+    right.metric("Layer 1 cosine", ordinal_percent(layer1.get("best_cosine")))
+
+    sentence = result.get("verdict_sentence") or ""
+    if band == "high":
+        st.error(sentence)
+    elif band == "caution":
+        st.warning(sentence)
+    else:
+        st.info(sentence)
+
+    with st.expander("How this score was built"):
+        l1_risk = score_mod.layer1_risk(layer1.get("best_cosine"))
+        l2_risk = score_mod.layer2_risk(hits)
+        st.write(
+            "Layer 1 risk: %s (weight %.2f). Layer 2 risk: %.4f (weight %.2f)."
+            % (
+                "-" if l1_risk is None else "%.4f" % l1_risk,
+                config.W_L1,
+                l2_risk,
+                config.W_L2,
+            )
+        )
+        st.caption(
+            "Layer 2 risk is the sum of the matched phrase weights divided by "
+            "%.2f, capped at 1.0. When Layer 1 has no comparable voiceprint, "
+            "the Layer 2 risk alone is rescaled to 0-100." % config.LAYER2_DIVISOR
+        )
+        notes = result.get("notes") or []
+        if notes:
+            st.markdown("**Notes from the engine:**")
+            for note in notes:
+                st.markdown("- " + str(note))
+
+    if result.get("transcript"):
+        with st.expander("Transcript (Prisma)"):
+            st.write(result["transcript"])
+
+
+def render_check_page():
+    st.subheader("Check a call")
+    st.info(
+        "This run uses about 2 Gnani API calls (transcription + voiceprint)."
+    )
+
+    if api_key_present():
+        st.caption(
+            "Audio that was already processed on this machine is reused without "
+            "a new API call."
+        )
+    else:
+        st.warning(
+            "GNANI_API_KEY is not set. Cached files still run; a new file will "
+            "fail when it calls the API."
+        )
+
+    left, right = st.columns(2)
+    with left:
+        uploaded = st.file_uploader(
+            "Upload a call recording (WAV)", type=["wav"], key="check_upload"
+        )
+    with right:
+        names = sample_files()
+        picked = st.selectbox(
+            "Or pick a sample file from samples\\",
+            options=[""] + names,
+            format_func=lambda value: value or "Choose a sample file",
+            key="check_sample",
+        )
+
+    if uploaded is not None and picked:
+        st.caption("Both are set, so the uploaded file is used.")
+
+    if st.button("Run check", type="primary"):
+        path = None
+        try:
+            if uploaded is not None:
+                path = save_upload(uploaded)
+            elif picked:
+                path = os.path.join(config.SAMPLES_DIR, picked)
+                if not os.path.exists(path):
+                    raise FileNotFoundError(path)
+            else:
+                raise ValueError("Choose a WAV to check, or pick a sample file.")
+
+            result = pipeline.run_check(path)
+
+            record_id = None
+            try:
+                entry = pipeline.save_record(result)
+                record_id = entry.get("id")
+            except Exception as save_exc:
+                st.warning(
+                    "The check finished, but the incident log could not be "
+                    "written: " + readable_error(save_exc)
+                )
+
+            result["record_id"] = record_id
+            st.session_state["check_result"] = result
+        except Exception as exc:
+            st.error(readable_error(exc))
+
+    result = st.session_state.get("check_result")
+
+    if result:
+        audio_rel = result.get("audio_path") or ""
+        audio_abs = os.path.join(ROOT, audio_rel.replace("/", os.sep))
+        if audio_rel and os.path.exists(audio_abs):
+            with st.expander("Caller audio"):
+                st.audio(audio_abs, format="audio/wav")
+
+        st.divider()
+        layer1_panel(result)
+        st.divider()
+        layer2_panel(result)
+        st.divider()
+        composite_panel(result)
+
+        if result.get("record_id"):
+            st.caption("Saved to the incident log as %s." % result["record_id"])
+    else:
+        st.divider()
+        st.markdown("#### Layer 1: voiceprint comparison")
+        st.caption("Run a check to see the comparison rows.")
+        st.divider()
+        st.markdown("#### Layer 2: Hinglish scam-pattern scan")
+        st.caption("Run a check to see the matched phrases.")
+        st.divider()
+        st.markdown("#### Composite result")
+        st.caption("Run a check to see the score and the verdict.")
+
+
+# ---------------------------------------------------------------------------
+# Section 2: spoken verdict
+# ---------------------------------------------------------------------------
+
+def render_spoken_page():
+    st.subheader("Spoken verdict")
+    st.caption("A Timbre voice reads the verdict sentence aloud. One Gnani API call per play.")
+
+    result = st.session_state.get("check_result")
+    if not result:
+        st.info("Run a check, then the verdict can be spoken here.")
+        st.markdown("**No verdict yet.** Open Check a call and run a check.")
+        return
+
+    sentence = result.get("verdict_sentence") or ""
+    st.markdown("**Verdict on screen:** " + sentence)
+
+    left, right = st.columns([1, 1])
+    with left:
+        voice = st.selectbox("Voice", VERDICT_VOICES, key="verdict_voice")
+    with right:
+        play = st.button("Play spoken verdict", type="primary")
+
+    spoken = st.session_state.get("spoken_verdict")
+    if play:
+        path = temp_path()
+        try:
+            gnani.text_to_speech(sentence, voice=voice, out=path)
+            if not os.path.exists(path) or os.path.getsize(path) <= 0:
+                raise RuntimeError("empty audio returned by Timbre")
+            st.session_state["spoken_verdict"] = {
+                "text": sentence,
+                "voice": voice,
+                "path": path,
+            }
+            spoken = st.session_state["spoken_verdict"]
+        except Exception as exc:
+            try:
+                os.remove(path)
+            except OSError:
+                pass
+            st.error("spoken verdict unavailable")
+            st.caption(readable_error(exc))
+
+    spoken = st.session_state.get("spoken_verdict")
+    if spoken and spoken.get("text") == sentence and spoken.get("voice") == voice:
+        st.caption("Spoken text: " + spoken["text"])
+        if os.path.exists(spoken.get("path") or ""):
+            st.audio(spoken["path"], format="audio/wav")
+        else:
+            st.info("The last spoken file is no longer on disk. Play it again.")
+    elif spoken:
+        st.caption("The voice or verdict changed. Play again to hear the current verdict.")
+
+    st.caption("The text verdict stays on screen whether or not the speech call worked.")
+
+
+# ---------------------------------------------------------------------------
+# Section 3: enrollment
+# ---------------------------------------------------------------------------
+
+def render_enroll_page():
+    st.subheader("Enroll a voice")
+
+    flash = st.session_state.pop("enroll_flash", None)
+    if flash:
+        st.success(flash)
+
+    st.caption(
+        "A voiceprint is a 768-number fingerprint of how a person sounds. A new "
+        "audio file costs one Gnani embedding call; audio already cached costs none."
+    )
+
+    left, right = st.columns(2)
+    with left:
+        name = st.text_input("Name", placeholder="Nalini", key="enroll_name")
+    with right:
+        role = st.text_input("Role", placeholder="Papa", key="enroll_role")
+
+    st.caption(
+        "The role is matched against claim phrases in the transcript. The engine "
+        "has claim lookups for Papa, Mummy, and CEO. Re-enrolling the same role "
+        "replaces that voiceprint."
+    )
+
+    uploaded = st.file_uploader(
+        "Voice sample (WAV)",
+        type=["wav"],
+        key="enroll_upload",
+    )
+
+    if st.button("Enroll or replace voiceprint", type="primary"):
+        try:
+            if not (name or "").strip():
+                raise ValueError("Type a name before enrolling.")
+            if not (role or "").strip():
+                raise ValueError("Type a role before enrolling.")
+            if uploaded is None:
+                raise ValueError("Upload a WAV voice sample before enrolling.")
+            path = save_upload(uploaded)
+            record = layer1_mod.enroll(path, name.strip(), role.strip())
+            st.session_state["enroll_flash"] = (
+                "Enrolled %s as %s (voiceprint %s)."
+                % (record.get("name"), record.get("role"), record.get("id"))
+            )
+            st.rerun()
+        except Exception as exc:
+            st.error(readable_error(exc))
+
+    st.divider()
+    st.markdown("#### Enrolled voiceprints")
+
+    records = layer1_mod.load_voiceprints()
+    if records:
+        rows = []
+        for record in records:
+            rows.append(
+                {
+                    "Name": record.get("name") or "-",
+                    "Role": record.get("role") or "-",
+                    "Date": show_time(record.get("created_at")),
+                    "Source": record.get("source_path") or "-",
+                }
+            )
+        st.dataframe(rows, hide_index=True)
+
+        labels = {
+            "%s (%s) [%s]"
+            % (
+                record.get("name") or "unnamed",
+                record.get("role") or "no role",
+                record.get("id") or "-",
+            ): record.get("id")
+            for record in records
+        }
+        chosen = st.selectbox("Voiceprint to remove", list(labels.keys()))
+        if st.button("Remove voiceprint"):
+            removed = layer1_mod.remove_voiceprint(labels[chosen])
+            if removed:
+                st.session_state["enroll_flash"] = "Removed %s (%s)." % (
+                    removed.get("name"),
+                    removed.get("role"),
+                )
+                st.rerun()
+            else:
+                st.error("That voiceprint is no longer in the list. Refresh and try again.")
+    else:
+        st.info("No voiceprints enrolled yet. Enroll one above before running a check.")
+
+
+# ---------------------------------------------------------------------------
+# Section 4: self-test
+# ---------------------------------------------------------------------------
+
+def _scorecard_tables(run):
+    metrics = run.get("metrics") or {}
+
+    columns = st.columns(4)
+    columns[0].metric("Scam caught", metrics.get("scam_caught") or "-")
+    columns[1].metric("Genuine passed", metrics.get("genuine_passed") or "-")
+    columns[2].metric("Caution", metrics.get("caution_count", 0))
+    columns[3].metric("Errors", metrics.get("errors", 0))
+
+    st.write("**Weakest scenario:** " + str(metrics.get("weakest") or "n/a"))
+    st.caption(run.get("honesty_line") or "")
+
+    st.markdown("##### Threshold sweep")
+    sweep_rows = []
+    for row in run.get("sweep") or []:
+        sweep_rows.append(
+            {
+                "Threshold": "%.2f" % float(row.get("threshold", 0)),
+                "Scam caught": str(row.get("scam_caught", "-")),
+                "Genuine passed": str(row.get("genuine_passed", "-")),
+                "Caution": row.get("caution_count", 0),
+                "Errors": row.get("errors", 0),
+            }
+        )
+    if sweep_rows:
+        st.dataframe(sweep_rows, hide_index=True)
+    else:
+        st.info("No threshold sweep in this run.")
+
+    hard_rows = []
+    for row in run.get("scenarios") or []:
+        if not row.get("hard_case"):
+            continue
+        hard_rows.append(
+            {
+                "Scenario": row.get("scenario_id"),
+                "Hard case": row.get("hard_case"),
+                "Expected": row.get("expected_label"),
+                "Composite": "-" if row.get("composite") is None else row.get("composite"),
+                "Band": row.get("band") or "-",
+                "Verdict": row.get("status"),
+            }
+        )
+    st.markdown("##### Hard cases")
+    if hard_rows:
+        st.dataframe(hard_rows, hide_index=True)
+    else:
+        st.caption("This run has no hard cases.")
+
+    with st.expander("Per-scenario results"):
+        rows = []
+        for row in run.get("scenarios") or []:
+            rows.append(
+                {
+                    "Scenario": row.get("scenario_id"),
+                    "Category": row.get("category"),
+                    "Expected": row.get("expected_label"),
+                    "Composite": "-" if row.get("composite") is None else row.get("composite"),
+                    "Band": row.get("band") or "-",
+                    "Verdict": row.get("status"),
+                    "Distance": "-" if row.get("distance") is None else row.get("distance"),
+                }
+            )
+        st.dataframe(rows, hide_index=True)
+
+    errors = [row for row in run.get("scenarios") or [] if row.get("status") == "error"]
+    if errors:
+        with st.expander("Scenario errors (%d)" % len(errors)):
+            for row in errors:
+                st.error("%s: %s" % (row.get("scenario_id"), row.get("error")))
+
+
+def render_selftest_page():
+    st.subheader("Self-test")
+    st.caption(
+        "The battery runs every generated scenario through the full pipeline and "
+        "compares the band with the known answer. A scam counts as caught at High "
+        "risk, a genuine call as passed at Low risk."
+    )
+
+    try:
+        from selftest import harness  # deferred: installs retry wrappers on import
+        scenario_count = len(harness.load_scenarios())
+    except Exception as exc:
+        harness = None
+        scenario_count = 0
+        st.error("The scenario list could not be read: " + readable_error(exc))
+
+    if harness is not None:
+        st.caption(
+            "This battery runs %d scenarios. Each uncached scenario makes about 2 "
+            "Gnani API calls; audio already cached costs none." % scenario_count
+        )
+
+    if harness is not None and st.button("Run self-test battery", type="primary"):
+        with st.spinner("Running the self-test battery. This can take a minute..."):
+            try:
+                run = harness.run_battery()
+            except Exception as exc:
+                st.error("The battery could not run: " + readable_error(exc))
+            else:
+                st.session_state["selftest_run"] = run
+                st.session_state.pop("scorecard_pdf", None)
+
+    run = st.session_state.get("selftest_run")
+    if not run:
+        st.info("Run the battery to see the scorecard.")
+        return
+
+    st.divider()
+    st.markdown(
+        "#### Scorecard  \nrun `%s`, threshold %.2f, scenarios %s"
+        % (run.get("run_id"), float(run.get("threshold", config.THRESHOLD)), run.get("scenario_count"))
+    )
+    _scorecard_tables(run)
+
+    st.divider()
+    pdf = st.session_state.get("scorecard_pdf")
+    if st.button("Prepare scorecard PDF"):
+        try:
+            from selftest import scorecard
+
+            path = scorecard.export_pdf(run)
+            with open(path, "rb") as handle:
+                data = handle.read()
+            st.session_state["scorecard_pdf"] = {
+                "run_id": run.get("run_id"),
+                "name": os.path.basename(path),
+                "data": data,
+            }
+            pdf = st.session_state["scorecard_pdf"]
+        except Exception as exc:
+            st.error("The scorecard PDF could not be written: " + readable_error(exc))
+
+    pdf = st.session_state.get("scorecard_pdf")
+    if pdf and pdf.get("run_id") == run.get("run_id"):
+        st.download_button(
+            "Download scorecard PDF",
+            data=pdf["data"],
+            file_name=pdf["name"],
+            mime="application/pdf",
+        )
+    elif pdf:
+        st.caption("The run changed. Prepare the PDF again for this run.")
+
+
+# ---------------------------------------------------------------------------
+# Section 5: incident log
+# ---------------------------------------------------------------------------
+
+def load_incidents():
+    try:
+        with open(config.INCIDENTS_PATH, "r", encoding="utf-8") as handle:
+            data = json.load(handle)
+    except FileNotFoundError:
+        return []
+    if isinstance(data, dict):
+        data = data.get("records") or []
+    if not isinstance(data, list):
+        raise ValueError("incident log does not contain a list")
+    return [row for row in data if isinstance(row, dict)]
+
+
+def incident_rows(entries):
+    rows = []
+    for entry in entries:
+        claim = entry.get("claim") or {}
+        if claim.get("detected_phrase"):
+            claimed = "%s: \"%s\"" % (
+                claim.get("role") or "claim",
+                claim.get("detected_phrase"),
+            )
+        else:
+            claimed = claim.get("note") or "no claim detected"
+
+        layer1 = entry.get("layer1") or {}
+        cosine = layer1.get("best_cosine")
+        l2_risk = score_mod.layer2_risk((entry.get("layer2") or {}).get("hits") or [])
+
+        rows.append(
+            {
+                "When": show_time(entry.get("checked_at") or entry.get("created_at")),
+                "Claimed identity": short(claimed, 70),
+                "Layer scores": "%s / %.2f" % (ordinal_percent(cosine), l2_risk),
+                "Score": "%s / 100" % entry.get("composite", "-"),
+                "Band": band_label(entry.get("band")),
+                "Verdict": short(entry.get("verdict_sentence") or "-", 120),
+                "Transcript excerpt": short(entry.get("transcript") or "", 160),
+            }
+        )
+    return rows
+
+
+def render_incident_page():
+    st.subheader("Incident log")
+    st.caption(
+        "Every completed check is appended to data\\incidents.json, so the log "
+        "survives a restart. No audio is stored in this log."
+    )
+
+    try:
+        entries = load_incidents()
+    except Exception as exc:
+        st.error("The incident log could not be read: " + readable_error(exc))
+        return
+
+    if not entries:
+        st.info("No checks recorded yet. Run a check and it appears here.")
+        return
+
+    entries = sorted(
+        entries,
+        key=lambda entry: str(entry.get("checked_at") or entry.get("created_at") or ""),
+        reverse=True,
+    )
+
+    dates = sorted(
+        {
+            parsed.date()
+            for parsed in (
+                parse_time(entry.get("checked_at") or entry.get("created_at"))
+                for entry in entries
+            )
+            if parsed is not None
+        }
+    )
+
+    if dates:
+        first_day, last_day = dates[0], dates[-1]
+        picked = st.date_input(
+            "Date range",
+            value=(first_day, last_day),
+            min_value=first_day,
+            max_value=last_day,
+        )
+        start = end = None
+        if isinstance(picked, (tuple, list)):
+            if len(picked) == 2:
+                start, end = picked
+            elif len(picked) == 1:
+                start = end = picked[0]
+        elif picked:
+            start = end = picked
+
+        if start and end:
+            filtered = []
+            for entry in entries:
+                parsed = parse_time(entry.get("checked_at") or entry.get("created_at"))
+                if parsed is not None and start <= parsed.date() <= end:
+                    filtered.append(entry)
+            entries = filtered
+
+    st.caption("%d check(s) in this range." % len(entries))
+    if entries:
+        st.dataframe(incident_rows(entries), hide_index=True)
+    else:
+        st.info("No checks in this date range.")
+
+    with st.expander("Verdict sentences"):
+        for entry in entries:
+            st.markdown(
+                "- %s: %s"
+                % (show_time(entry.get("checked_at")), entry.get("verdict_sentence") or "-")
+            )
+
+
+# ---------------------------------------------------------------------------
+# Entry point
+# ---------------------------------------------------------------------------
+
+def main():
+    st.set_page_config(page_title="CloneGuard", page_icon="🛡️", layout="wide")
+
+    page = sidebar()
+
+    st.title("CloneGuard")
+    st.caption(
+        "Checks whether a caller's voice matches a trusted enrolled person, and "
+        "scans the conversation for Hinglish scam patterns."
+    )
+
+    if not api_key_present():
+        st.warning(
+            "Set the environment variable GNANI_API_KEY and restart the app. "
+            "Checks on cached audio still run; a new file will fail when it "
+            "calls the API."
+        )
+
+    if page == "Check a call":
+        render_check_page()
+    elif page == "Spoken verdict":
+        render_spoken_page()
+    elif page == "Enroll a voice":
+        render_enroll_page()
+    elif page == "Self-test":
+        render_selftest_page()
+    elif page == "Incident log":
+        render_incident_page()
+
+    render_footer()
+
+
+if __name__ == "__main__":
+    main()

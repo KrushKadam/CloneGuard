@@ -151,6 +151,22 @@ def enroll(wav_path, name, role):
     return record
 
 
+def remove_voiceprint(voiceprint_id):
+    """Delete one enrolled voiceprint. Returns the removed record, or None."""
+    records = load_voiceprints()
+    removed = None
+    kept = []
+    for row in records:
+        if removed is None and row.get("id") == voiceprint_id:
+            removed = row
+            continue
+        kept.append(row)
+    if removed is None:
+        return None
+    save_voiceprints(kept)
+    return removed
+
+
 def get_default(voiceprints=None):
     """First enrolled record, unless config pins a default id."""
     rows = load_voiceprints() if voiceprints is None else voiceprints
