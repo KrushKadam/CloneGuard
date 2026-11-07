@@ -286,7 +286,18 @@
       "किसी को मत बताएं",
       "किसी को अभी मत बताना",
       "किसी को कुछ मत बताना",
-      "किसी को भी मत बताना"
+      "किसी को भी मत बताना",
+      "kisi ko nahi batana",
+      "kisi ko nahin batana",
+      "kisi ko nahi batni",
+      "kisi ko nahi batayein",
+      "yeh baat kisi ko nahi",
+      "kisi ko bhi nahi batana",
+      "किसी को नहीं बताना",
+      "किसी को नहीं बतानी",
+      "किसी को नहीं बताएं",
+      "यह बात किसी को नहीं",
+      "किसी को भी नहीं बताना"
     ],
     "severity": "medium",
     "weight": 0.2
@@ -375,5 +386,77 @@
     ],
     "severity": "high",
     "weight": 0.4
+  },
+  {
+    "id": "emotional_accident_hospital",
+    "category": "emotional",
+    "phrase_variants": [
+      "accident ho gaya hai",
+      "accident ho gaya",
+      "mera accident ho gaya",
+      "hospital mein admitted",
+      "hospital mein admit hoon",
+      "एक्सीडेंट हो गया है",
+      "एक्सीडेंट हो गया",
+      "एक्सिडेंट हो गया",
+      "हॉस्पिटल में एडमिटेड",
+      "अस्पताल में भर्ती"
+    ],
+    "severity": "medium",
+    "weight": 0.2
+  },
+  {
+    "id": "threats_virus_or_data_leak",
+    "category": "threats",
+    "phrase_variants": [
+      "virus detected",
+      "computer mein virus",
+      "virus hai aapke computer",
+      "bank data leak",
+      "data leak ho raha",
+      "वायरस डिटेक्ट",
+      "कंप्यूटर में वायरस",
+      "बैंक डेटा लीक",
+      "डेटा लीक हो रहा",
+      "डेटा लीक"
+    ],
+    "severity": "medium",
+    "weight": 0.2
+  },
+  {
+    "id": "authority_brand_support_claim",
+    "category": "authority",
+    "phrase_variants": [
+      "microsoft se bol raha",
+      "microsoft support",
+      "microsoft ki technical support",
+      "windows support se",
+      "technical support team se bol raha",
+      "माइक्रोसॉफ्ट की टेक्निकल सपोर्ट",
+      "माइक्रोसॉफ्ट सपोर्ट",
+      "माइक्रोसॉफ्ट से बोल रहा",
+      "विंडोज सपोर्ट से",
+      "टेक्निकल सपोर्ट टीम से बोल रहा"
+    ],
+    "severity": "medium",
+    "weight": 0.2
+  },
+  {
+    "id": "cta_paise_bhej_do",
+    "category": "call_to_action",
+    "phrase_variants": [
+      "paise bhej do",
+      "paise bhejo",
+      "paise bhej dijiye",
+      "paise transfer kar do",
+      "turant paise bhejo",
+      "पैसे भेज दो",
+      "पैसे भेजो",
+      "पैसे भेज दीजिए",
+      "पैसे ट्रांसफर कर दो",
+      "तुरंत पैसे भेजो"
+    ],
+    "severity": "medium",
+    "weight": 0.2
   }
 ]

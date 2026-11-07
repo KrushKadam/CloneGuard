@@ -6,10 +6,13 @@ The PDF is a calibration report, not a benchmark: every script was written by
 the same person who wrote the engine, so the honesty line is printed on the
 page itself.
 
-Devanagari handling: no Devanagari-capable TTF was found on this machine
-(DejaVuSans does not cover Devanagari either), so the PDF uses the built-in
-core font and replaces any Devanagari run with its Latin equivalent / matched
-phrase before drawing. This is stated on the PDF footer as well.
+Devanagari handling: a Devanagari-capable font is installed on this machine
+(Windows ships Nirmala UI in C:\\Windows\\Fonts\\Nirmala.ttc, and reports\\
+incident_pdf.py embeds it). This scorecard simply does not print Devanagari
+transcript excerpts: its tables carry scenario ids, bands, verdicts and Latin
+matched phrases only. Text still passes through latinize() as a safety net, so
+a stray Devanagari run is replaced rather than dropped. This is stated on the
+PDF footer as well.
 """
 
 import json
@@ -43,9 +46,11 @@ _PUNCT_MAP = {
 }
 
 DEVANAGARI_NOTE = (
-    "Devanagari: no Devanagari-capable font is installed here, so the built-in "
-    "core font is used and Devanagari text is replaced with its Latin equivalent "
-    "(matched phrase where one exists). Nothing is dropped silently."
+    "Devanagari: Nirmala UI (C:\\Windows\\Fonts\\Nirmala.ttc) is installed on this "
+    "machine, but this scorecard prints no Devanagari transcript excerpts - its "
+    "tables carry scenario ids, bands, verdicts and Latin matched phrases only. "
+    "latinize() remains a safety net, so a stray Devanagari run is replaced rather "
+    "than dropped."
 )
 
 
