@@ -328,6 +328,66 @@ def composite_panel(result):
             st.write(result["transcript"])
 
 
+def find_incident(record_id):
+    """The stored row in data\\incidents.json for this check, or None."""
+    if not record_id:
+        return None
+    for entry in reversed(load_incidents()):
+        if entry.get("id") == record_id:
+            return entry
+    return None
+
+
+def evidence_panel(result):
+    """Prepare the PDF evidence report for the stored check and offer it."""
+    try:
+        record = find_incident(result.get("record_id"))
+    except Exception:
+        record = None
+    if record is None:
+        return
+
+    st.markdown("#### Evidence report")
+    st.caption(
+        "One PDF built from the stored record. Making it runs no new analysis "
+        "and spends no Gnani calls."
+    )
+
+    if st.button("Prepare evidence report (PDF)", key="evidence_prepare"):
+        try:
+            from reports import incident_pdf
+
+            path = incident_pdf.render_incident_pdf(record)
+            with open(path, "rb") as handle:
+                data = handle.read()
+            st.session_state["evidence_pdf"] = {
+                "record_id": record.get("id"),
+                "name": os.path.basename(path),
+                "path": path,
+                "data": data,
+            }
+        except Exception:
+            st.error(
+                "Report could not be saved. The check is still in the incident log."
+            )
+            return
+
+    bundle = st.session_state.get("evidence_pdf")
+    if bundle and bundle.get("record_id") == record.get("id"):
+        st.download_button(
+            "Download evidence report (PDF)",
+            data=bundle["data"],
+            file_name=bundle["name"],
+            mime="application/pdf",
+            key="evidence_download",
+        )
+        st.caption("Saved at %s" % bundle["path"])
+    elif bundle:
+        st.caption(
+            "Another check was exported last. Prepare the report again for this check."
+        )
+
+
 def render_check_page():
     st.subheader("Check a call")
     st.info(
@@ -409,6 +469,8 @@ def render_check_page():
 
         if result.get("record_id"):
             st.caption("Saved to the incident log as %s." % result["record_id"])
+            st.divider()
+            evidence_panel(result)
     else:
         st.divider()
         st.markdown("#### Layer 1: voiceprint comparison")

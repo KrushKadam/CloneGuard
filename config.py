@@ -5,6 +5,8 @@ Everything tunable lives here so the engine modules stay dumb.
 
 import os
 
+APP_VERSION = "0.1.0"
+
 ROOT = os.path.dirname(os.path.abspath(__file__))
 DATA_DIR = os.path.join(ROOT, "data")
 SAMPLES_DIR = os.path.join(ROOT, "samples")
