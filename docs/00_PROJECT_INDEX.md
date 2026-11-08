@@ -1,7 +1,7 @@
 # CloneGuard — Project Index (Start Here)
 
 **Prepared:** 4 November 2026
-**Status:** Living document, refreshed **7 November 2026** after the build. The build is complete through step 5, and this pass (step 7) rewrote the documents against the running app. Steps 6 (public artifacts) and 8 (ownership) wait on the user and the trials.
+**Status:** Living document, refreshed **8 November 2026** after the build. Build complete through step 7 (all eight features shipped and verified; docs match the as-built app). Only step 8 remains: ownership actions (GitHub push/tag if the user wants it) and the user's hands-on trials.
 **Companion documents:**
 
 - `docs/01_PRIOR_ART.md` — what already exists in this market, with sources.
@@ -45,8 +45,8 @@ The demo path and the video storyboard live in `docs/02_POSITIONING.md`, Section
 | `04_ARCHITECTURE.md` | How the parts fit together: modules, data flow, API calls, failure handling. | Done (living; as-built sections) | Build steps 1–5 |
 | `05_DATA_MODEL.md` | What is stored, where, and in what shape (enrolled voices, checks, incidents). Also holds the storage-engine recommendation. | Done (living; field names checked against `data\`) | Build steps 1–5, incident log, PDF reports |
 | `06_INNOVATION_REPORT.md` | The narrative report: problem, approach, measured results, limitations. | Done (living). Section 6 carries the completed calibration run. | Submission, ownership evidence |
-| `README.md` | The GitHub front page. Sits at the repository root and is the one document allowed outside `docs\`. | Still the early placeholder. Rewrite rides with step 6. | Public repo landing page, judges |
-| Contest pack (post + video script + submission answers) | The three public artifacts the contest asks for. Kept together in `docs\`. | Pending (build step 6) | LinkedIn/X post, 60-second video, submission form |
+| `README.md` | The GitHub front page. Sits at the repository root and is the one document allowed outside `docs\`. | Done (rewritten, 71634b5) | Public repo landing page, judges |
+| Contest pack (post + video script + submission answers) | The three public artifacts the contest asks for. Kept together in `docs\`. | Done (docs/07_CONTEST_PACK.md, 71634b5) | LinkedIn/X post, 60-second video, submission form |
 
 **Halted for now (deliberately not written yet):**
 
@@ -184,9 +184,9 @@ State these wherever the tool is described. They are not defects to hide; they a
 |---|---|---|
 | UI/UX visual design | Settled in build step 4: five sidebar pages (Check a call, Spoken verdict, Enroll a voice, Self-test, Incident log) plus a footer that carries the local/cloud line and the limitations. | Closed |
 | Storage engine (plain text files vs a small local database) | Settled: JSON files in `data\`. The record counts stayed small, so the database was not needed. | Closed |
-| README rewrite | Deferred. The current root `README.md` is still the placeholder from the early API test. | After build, as part of step 6 |
-| Contest pack (post, video script, submission answers) | Pending. The app, the scorecard, and the PDF report now exist, so the pack can quote real results. | Build step 6 |
+| README rewrite | Done (rewritten, 71634b5) | Closed/done with commit |
+| Contest pack (post, video script, submission answers) | Done (docs/07_CONTEST_PACK.md, 71634b5) | Closed/done with commit |
 
 ---
 
-*Last updated: 7 November 2026. Sections 3, 5, 7, and 9 now describe what shipped. The remaining gap is the public artifact pack (step 6) and the ownership actions (step 8).*
+*Last updated: 8 November 2026. Steps 6 and 7 completed. The remaining gap is the ownership actions (step 8).*
