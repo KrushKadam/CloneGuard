@@ -37,11 +37,11 @@ The list below matches `docs/02_POSITIONING.md`, Section 3. Numbers are used for
 **(b) Acceptance criteria.**
 
 - [ ] At least two different voices can be enrolled, each with a name and a role label.
-- [ ] Enrolled voices are listed in the app with their names and enrollment date.
+- [x] Enrolled voices are listed in the app with their names and enrollment date.
 - [ ] A voice can be removed and enrolled again without breaking the list.
-- [ ] A transcript containing a recognised claim phrase selects the matching enrolled voice.
-- [ ] A transcript with no claim, or an unclear claim, falls back to the default enrolled voice and says so on screen.
-- [ ] The app shows which enrolled voice was used for the comparison.
+- [x] A transcript containing a recognised claim phrase selects the matching enrolled voice.
+- [x] A transcript with no claim, or an unclear claim, falls back to the default enrolled voice and says so on screen.
+- [x] The app shows which enrolled voice was used for the comparison.
 
 **(c) Inputs and outputs.** In: a WAV audio file (an uncompressed sound format) of a trusted person, a name and role typed by the user, and a transcript containing a claim phrase. Out: a stored fingerprint of 768 numbers per enrolled voice, plus the selected voiceprint ID and the detected claim text.
 
@@ -56,12 +56,12 @@ A composite score (one combined number built from both layers) summarises the re
 
 **(b) Acceptance criteria.**
 
-- [ ] Layer 1 shows the similarity number, the threshold it was compared against, and a match or mismatch label.
-- [ ] Layer 2 lists every matched red-flag phrase and which rule fired.
-- [ ] The composite score is shown with a plain-English verdict line, not a bare number.
-- [ ] Both layers stay visible when one of them is inconclusive.
-- [ ] The screen never says the tool "detects AI-cloned voice". It says it flags an identity mismatch.
-- [ ] A mismatch on Layer 1 alone never produces a verdict of "synthetic audio".
+- [x] Layer 1 shows the similarity number, the threshold it was compared against, and a match or mismatch label.
+- [x] Layer 2 lists every matched red-flag phrase and which rule fired.
+- [x] The composite score is shown with a plain-English verdict line, not a bare number.
+- [x] Both layers stay visible when one of them is inconclusive.
+- [x] The screen never says the tool "detects AI-cloned voice". It says it flags an identity mismatch.
+- [x] A mismatch on Layer 1 alone never produces a verdict of "synthetic audio".
 
 **(c) Inputs and outputs.** In: the caller's audio file and the enrolled fingerprint chosen by Feature 1. Out: a Layer 1 similarity score with a match or mismatch label, a Layer 2 list of matched phrases with rule names, and a composite score with a verdict sentence.
 
@@ -71,11 +71,11 @@ A composite score (one combined number built from both layers) summarises the re
 
 **(b) Acceptance criteria.**
 
-- [ ] Scam scripts and genuine scripts can both be generated.
-- [ ] At least two Timbre voices are used, so the caller's voice can differ from the enrolled voice.
-- [ ] Generated audio includes a phone-line noise effect.
-- [ ] Each file is saved as a WAV with a label recording its known answer.
-- [ ] Generation works with no microphone and no external recording.
+- [x] Scam scripts and genuine scripts can both be generated.
+- [x] At least two Timbre voices are used, so the caller's voice can differ from the enrolled voice.
+- [x] Generated audio includes a phone-line noise effect.
+- [x] Each file is saved as a WAV with a label recording its known answer.
+- [x] Generation works with no microphone and no external recording.
 - [ ] Scripts read naturally in Hinglish, not as translated English.
 
 **(c) Inputs and outputs.** In: a scenario choice (scam or genuine) and a voice choice. Out: a WAV file in `samples\`, plus a label recording the known answer and the script text. All generated audio uses Timbre voices because no microphone exists on this machine. Nalini and Deepak are the two voices used for the feasibility work; a list of 766 voices is available if a scenario needs another one. No real user voice is recorded at any point.
@@ -86,13 +86,13 @@ A composite score (one combined number built from both layers) summarises the re
 
 **(b) Acceptance criteria.**
 
-- [ ] One click runs the whole battery with no manual file handling.
-- [ ] The scorecard shows **scam caught X/Y**, with both numbers filled from a real run.
-- [ ] The scorecard shows **genuine passed A/B**, with both numbers filled from a real run.
-- [ ] The scorecard names the weakest scenario.
-- [ ] The scorecard shows how the result changes around the threshold (the cut-off score where a call flips from pass to fail).
-- [ ] The scorecard exports to PDF.
-- [ ] A failed request to a Gnani service inside the battery is reported as an error, not counted as a pass.
+- [x] One click runs the whole battery with no manual file handling.
+- [x] The scorecard shows **scam caught X/Y**, with both numbers filled from a real run.
+- [x] The scorecard shows **genuine passed A/B**, with both numbers filled from a real run.
+- [x] The scorecard names the weakest scenario.
+- [x] The scorecard shows how the result changes around the threshold (the cut-off score where a call flips from pass to fail).
+- [x] The scorecard exports to PDF.
+- [x] A failed request to a Gnani service inside the battery is reported as an error, not counted as a pass.
 
 **(c) Inputs and outputs.** In: the generated scenario set from Feature 3 and the current threshold settings. Out: an on-screen scorecard and a PDF copy of it.
 
@@ -102,24 +102,24 @@ A composite score (one combined number built from both layers) summarises the re
 
 **(b) Acceptance criteria.**
 
-- [ ] The verdict sentence can be played from the result screen.
-- [ ] The spoken text matches the on-screen verdict, including both layer results.
-- [ ] The voice can be chosen from the available Timbre voices.
-- [ ] A failed speech call shows a clear error and leaves the text verdict intact.
+- [x] The verdict sentence can be played from the result screen.
+- [x] The spoken text matches the on-screen verdict, including both layer results.
+- [x] The voice can be chosen from the available Timbre voices.
+- [x] A failed speech call shows a clear error and leaves the text verdict intact.
 
 **(c) Inputs and outputs.** In: the verdict sentence from Feature 2 and a chosen Timbre voice. Out: playable audio of the verdict.
 
-### Feature 6 — Incident log
+### Feature 6 — File-based incident log with date filter
 
 **(a) What it does.** Every check is written to a local record: when it ran, who was claimed, both layer scores, the verdict, and a short transcript excerpt. The log is how a user reviews a pattern over time instead of judging one call in isolation.
 
 **(b) Acceptance criteria.**
 
-- [ ] Every completed check adds one entry automatically.
-- [ ] Each entry shows timestamp, claimed identity, layer scores, verdict, and transcript excerpt.
-- [ ] Entries survive an app restart.
-- [ ] The log can be filtered or sorted by date.
-- [ ] No audio is stored in the log beyond what the user already saved.
+- [x] Every completed check adds one entry automatically.
+- [x] Each entry shows timestamp, claimed identity, layer scores, verdict, and transcript excerpt.
+- [x] Entries survive an app restart.
+- [x] The log can be filtered or sorted by date.
+- [x] No audio is stored in the log beyond what the user already saved.
 
 **(c) Inputs and outputs.** In: a completed check result. Out: a local record, readable inside the app.
 
@@ -129,10 +129,10 @@ A composite score (one combined number built from both layers) summarises the re
 
 **(b) Acceptance criteria.**
 
-- [ ] One PDF can be generated per check.
-- [ ] The report contains both layer scores, matched phrases, transcript excerpt, verdict, and timestamp.
-- [ ] The report states the known limitations, including that a mismatch is not proof of synthetic audio.
-- [ ] The PDF opens in a standard reader with no missing fonts or broken layout.
+- [x] One PDF can be generated per check.
+- [x] The report contains both layer scores, matched phrases, transcript excerpt, verdict, and timestamp.
+- [x] The report states the known limitations, including that a mismatch is not proof of synthetic audio.
+- [x] The PDF opens in a standard reader with no missing fonts or broken layout.
 
 **(c) Inputs and outputs.** In: a completed check result. Out: a PDF file saved to disk.
 
@@ -142,11 +142,11 @@ A composite score (one combined number built from both layers) summarises the re
 
 **(b) Acceptance criteria.**
 
-- [ ] The app starts with one command and opens at `localhost`.
-- [ ] All eight features are reachable from the interface without editing files.
-- [ ] A missing file or a failed API call shows a readable message instead of a crash.
-- [ ] Every label follows the wording rules in `docs/02_POSITIONING.md`.
-- [ ] The screen says the interface is local and the analysis is cloud-based.
+- [x] The app starts with one command and opens at `localhost`.
+- [x] All eight features are reachable from the interface without editing files.
+- [x] A missing file or a failed API call shows a readable message instead of a crash.
+- [x] Every label follows the wording rules in `docs/02_POSITIONING.md`.
+- [x] The screen says the interface is local and the analysis is cloud-based.
 
 **(c) Inputs and outputs.** In: user clicks, typed names, and audio files from the generator or from disk. Out: a running local web app.
 

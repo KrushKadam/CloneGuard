@@ -1,7 +1,7 @@
 # CloneGuard — Project Index (Start Here)
 
 **Prepared:** 4 November 2026
-**Status:** Living document. The plan below is correct as of the prepared date. It must be updated once the build is finished so that it describes what actually shipped, not what was planned.
+**Status:** Living document, refreshed **7 November 2026** after the build. The build is complete through step 5, and this pass (step 7) rewrote the documents against the running app. Steps 6 (public artifacts) and 8 (ownership) wait on the user and the trials.
 **Companion documents:**
 
 - `docs/01_PRIOR_ART.md` — what already exists in this market, with sources.
@@ -38,22 +38,22 @@ The demo path and the video storyboard live in `docs/02_POSITIONING.md`, Section
 
 | File | What it is | Status | What it feeds |
 |---|---|---|---|
-| `00_PROJECT_INDEX.md` | This file. The entry point for anyone picking the project up. | Done (living) | Navigation, session rules, build order |
+| `00_PROJECT_INDEX.md` | This file. The entry point for anyone picking the project up. | Done (living, refreshed 7 November 2026) | Navigation, session rules, build order |
 | `01_PRIOR_ART.md` | Competitor and research sweep with sources and fetch dates. | Done | Judge answers, "hasn't this been done?" section, README |
-| `02_POSITIONING.md` | Canonical description, wording rules, 8-feature list, award mapping, demo path. | Done | Every public sentence: README, post, video script, submission |
-| `03_REQUIREMENTS.md` | Plain-English requirements: what to build, acceptance criteria, evidence plan. | Done (living) | Build checklist, Definition of Done, submission answers |
-| `04_ARCHITECTURE.md` | How the parts fit together: modules, data flow, API calls, failure handling. | Done (living) | Build steps 1–5 |
-| `05_DATA_MODEL.md` | What is stored, where, and in what shape (enrolled voices, checks, incidents). Also holds the storage-engine recommendation. | Done (living) | Build steps 1–5, incident log, PDF reports |
-| `06_INNOVATION_REPORT.md` | The narrative report: problem, approach, measured results, limitations. | Done (living). Section 6 awaits the build. | Submission, ownership evidence; Sections 1–5 and 7–10 drafted, Section 6 stubbed |
-| `README.md` | The GitHub front page. Sits at the repository root and is the one document allowed outside `docs\`. | After build | Public repo landing page, judges |
-| Contest pack (post + video script + submission answers) | The three public artifacts the contest asks for. Kept together in `docs\`. | After build | LinkedIn/X post, 60-second video, submission form |
+| `02_POSITIONING.md` | Canonical description, wording rules, 8-feature list, award mapping, demo path. | Done (one evidence line refreshed) | Every public sentence: README, post, video script, submission |
+| `03_REQUIREMENTS.md` | Plain-English requirements: what to build, acceptance criteria, evidence plan. | Done (living; acceptance boxes ticked only where evidence exists) | Build checklist, Definition of Done, submission answers |
+| `04_ARCHITECTURE.md` | How the parts fit together: modules, data flow, API calls, failure handling. | Done (living; as-built sections) | Build steps 1–5 |
+| `05_DATA_MODEL.md` | What is stored, where, and in what shape (enrolled voices, checks, incidents). Also holds the storage-engine recommendation. | Done (living; field names checked against `data\`) | Build steps 1–5, incident log, PDF reports |
+| `06_INNOVATION_REPORT.md` | The narrative report: problem, approach, measured results, limitations. | Done (living). Section 6 carries the completed calibration run. | Submission, ownership evidence |
+| `README.md` | The GitHub front page. Sits at the repository root and is the one document allowed outside `docs\`. | Still the early placeholder. Rewrite rides with step 6. | Public repo landing page, judges |
+| Contest pack (post + video script + submission answers) | The three public artifacts the contest asks for. Kept together in `docs\`. | Pending (build step 6) | LinkedIn/X post, 60-second video, submission form |
 
 **Halted for now (deliberately not written yet):**
 
 | Item | Why it is paused | When it resumes |
 |---|---|---|
-| UI/UX visual design | The screens are easier to design once the working pipeline exists and the real labels are known. | During the build, at build step 4 |
-| Decision log | Kept as one-line entries added as choices are made, not written in advance. | During the build, continuously |
+| UI/UX visual design | Settled during the build: five sidebar pages plus a footer, built in step 4. | Closed |
+| Decision log | Kept as one-line commit messages plus the notes in `04_ARCHITECTURE.md`, Section 16, rather than a separate file. | Closed |
 
 ---
 
@@ -113,15 +113,17 @@ No documentation files in the project root, with one exception: `README.md`, whi
 
 Follow this order. Each step produces something the next step can use.
 
-0. **Start the repository.** Create a private git repository (a version-controlled folder that records every change) and commit the whole `docs\` folder before writing code. This is the starting point of the ownership trail.
-1. **Scam-call generator.** Produce scam and genuine call scripts in Hinglish, spoken by Timbre voices (Gnani's text-to-speech service, which turns written text into audio) with a phone-line noise effect. Every test file comes from here, because the machine has no microphone.
-2. **Detection engine, both layers.** Layer 1: enroll a voice, store its fingerprint, compare a new caller against it. Layer 2: transcribe with Prisma (Gnani's speech-to-text service) and scan for red-flag phrases. Combine into one score.
-3. **Self-Test Harness.** One button that generates a battery of scenarios with known answers (scam or genuine), runs them through the full pipeline, and prints a calibration scorecard (a report card comparing what the tool decided with what was true).
-4. **Streamlit UI.** Streamlit is a Python library that turns a script into a web page; it serves the app on `localhost`. Replace the old 18-line command-line menu in `app.py` with the real interface.
-5. **PDF reports.** One shareable document per check (PDF opens the same way on any machine), containing both layer scores, the red-flag phrases, a transcript excerpt, and the verdict.
-6. **Public artifacts.** Record the 60-second video, publish the LinkedIn or X post with both hashtags, submit the entry.
-7. **Documentation pass.** Update every file in `docs\` to match the finished build.
-8. **Ownership steps.** Run the post-build actions in Section 6.
+0. **Start the repository.** Create a private git repository (a version-controlled folder that records every change) and commit the whole `docs\` folder before writing code. This is the starting point of the ownership trail. **Done, `7bb8753`.**
+1. **Scam-call generator.** Produce scam and genuine call scripts in Hinglish, spoken by Timbre voices (Gnani's text-to-speech service, which turns written text into audio) with a phone-line noise effect. Every test file comes from here, because the machine has no microphone. **Done, `05eb0bf`:** seven scam families (including one scam with no urgency words) and three genuine calls, voiced by Nalini and Deepak, ten WAVs plus `data\scenarios.json`.
+2. **Detection engine, both layers.** Layer 1: enroll a voice, store its fingerprint, compare a new caller against it. Layer 2: transcribe with Prisma (Gnani's speech-to-text service) and scan for red-flag phrases. Combine into one score. **Done, `fbea884`:** threshold 0.55, a verified scam at 74/high against a genuine call at 0/low.
+3. **Self-Test Harness.** One button that generates a battery of scenarios with known answers (scam or genuine), runs them through the full pipeline, and prints a calibration scorecard (a report card comparing what the tool decided with what was true). **Done, `6725421`:** battery, scorecard, threshold sweep, and scorecard PDF export.
+4. **Streamlit UI.** Streamlit is a Python library that turns a script into a web page; it serves the app on `localhost`. Replace the old 18-line command-line menu in `app.py` with the real interface. **Done, `3d8a5d4`:** five sidebar pages plus a footer, verified with Streamlit's AppTest and a headless HTTP check.
+5. **PDF reports.** One shareable document per check (PDF opens the same way on any machine), containing both layer scores, the red-flag phrases, a transcript excerpt, and the verdict. **Done, `b9c62c6`:** A4 report with native Devanagari, verified by extracting the text with `pypdf`.
+6. **Public artifacts.** Record the 60-second video, publish the LinkedIn or X post with both hashtags, submit the entry. **Pending.**
+7. **Documentation pass.** Update every file in `docs\` to match the finished build. **Done in this pass** (working tree at the time of writing; not yet committed).
+8. **Ownership steps.** Run the post-build actions in Section 6. **Pending, user action.**
+
+Calibration sits between steps 5 and 7 and is recorded here because it changed the test numbers, not the code shape: commit `a94752a` raised the pattern list from 28 to 32 dual-script rules and re-ran the battery. Result: scam caught **7/7**, genuine passed **3/3**, caution **0**, errors **0**, flat across thresholds **0.45–0.65**. The score weights stayed at 0.5/0.5 because the run did not justify moving them.
 
 ---
 
@@ -150,11 +152,18 @@ The goal is a dated, verifiable trail showing the work was yours and was done by
 | Different-speaker voice match | **0.2964** | Two recordings of different voices, measured the same way. |
 | Separation gap | **0.4342** | The distance between the two results. A wide gap means the comparison can tell voices apart on these samples. |
 | Fingerprint size | **768 numbers** | Each voice fingerprint (embedding) is 768 decimal numbers. Small enough to store in a plain file. |
+| Identity threshold | **0.55** | The cosine cut-off used for every check. The sweep below shows the result did not move when it was changed. |
+| Scam calls caught | **7/7** | From the calibration run in `data\selftest_runs.json` (`run_20261107_183026_08f8`). Every scam scenario landed at high risk. |
+| Genuine calls passed | **3/3** | Same run. Every genuine scenario landed at low risk. |
+| Caution and error counts | **0 and 0** | No scenario hedged into the middle band and none failed to complete. |
+| Threshold sweep | **flat at 0.45–0.65** | Five settings (0.45, 0.50, 0.55, 0.60, 0.65) all returned 7/7 and 3/3, so 0.55 is robust on this set rather than a knife-edge fit. |
+| Scam phrase rules | **32 patterns, 204 variants** | Six categories, each variant stored in Latin and Devanagari script. A 51-variant subset returned zero hits on the genuine transcripts. |
+| Score weights | **0.5 / 0.5, unchanged** | Calibration found no evidence for moving the weights, so the original equal split stands. |
 | Credit budget | **5,000 credits** | The allowance for Gnani API calls. Spend it on real feature tests, not on repeated experiments. |
 | Credit usage page | `app.gnani.ai` → Usage | Where the remaining balance is checked. |
 | Deadline | **10 November 2026** | Fixed. |
 
-The measurement comes from `voiceprint_test.py`. Re-running it gives identical numbers, because the fingerprint step is deterministic (the same audio always produces the same numbers).
+The voice measurements come from `voiceprint_test.py`. Re-running it gives identical numbers, because the fingerprint step is deterministic (the same audio always produces the same numbers). The calibration numbers come from `python selftest\harness.py`, which re-runs at 0 credits on this machine because the speech-to-text and embedding caches in `data\` cover the generated audio.
 
 ---
 
@@ -173,11 +182,11 @@ State these wherever the tool is described. They are not defects to hide; they a
 
 | Decision | Current state | Where it gets settled |
 |---|---|---|
-| UI/UX visual design | Halted. Waiting for real screens and real labels. | During build step 4 |
-| Storage engine (plain text files vs a small local database) | Open. The default recommendation now lives in `05_DATA_MODEL.md` (JSON in `data\`). | During the build |
-| README rewrite | Deferred. The current root `README.md` is a placeholder from the early API test. | After build, as the last documentation step |
-| Contest pack (post, video script, submission answers) | Deferred. Writing it before the demo exists would mean rewriting it. | After build, build step 6 |
+| UI/UX visual design | Settled in build step 4: five sidebar pages (Check a call, Spoken verdict, Enroll a voice, Self-test, Incident log) plus a footer that carries the local/cloud line and the limitations. | Closed |
+| Storage engine (plain text files vs a small local database) | Settled: JSON files in `data\`. The record counts stayed small, so the database was not needed. | Closed |
+| README rewrite | Deferred. The current root `README.md` is still the placeholder from the early API test. | After build, as part of step 6 |
+| Contest pack (post, video script, submission answers) | Pending. The app, the scorecard, and the PDF report now exist, so the pack can quote real results. | Build step 6 |
 
 ---
 
-*Last updated: 4 November 2026. This is a living document: after the build finishes, re-read every section and correct anything that no longer matches the app.*
+*Last updated: 7 November 2026. Sections 3, 5, 7, and 9 now describe what shipped. The remaining gap is the public artifact pack (step 6) and the ownership actions (step 8).*

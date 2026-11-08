@@ -136,7 +136,7 @@ It returns the detected phrase, the resolved voiceprint id, and a resolution not
 | Emotional manipulation | Uses fear, family, or sympathy | "papa bimar hain", "mujhe bachao", "kisi ko mat batao", "please help" | medium |
 | Deceptive call to action | Pushes a payment, transfer, or install | "google pay se bhejo", "UPI karo", "link kholo", "team viewer install karo", "anydesk" | high |
 
-**Where patterns live.** `data\patterns.json`, one record per pattern: id, category, phrase variants, severity, weight. Editing the file changes behaviour without touching code, so the phrase list can grow during the build and stay reviewable.
+**Where patterns live.** `data\patterns.json`, one record per pattern: id, category, phrase variants, severity, weight. Editing the file changes behaviour without touching code, so the phrase list can grow during the build and stay reviewable. Patterns are dual-script: Prisma STT returns Devanagari, so each phrase has Latin + Devanagari variants (32 patterns, ~204 variants).
 
 **Matching rules.**
 
@@ -200,7 +200,7 @@ One button runs the tool against a battery of calls whose answers are already kn
 
 **PDF export.** A one-page PDF: run id, date, scenario count, the metrics above, a per-scenario table, and the threshold sweep.
 
-**What a good scorecard proves.** That decisions were checked against known answers, that failures are visible, and that the threshold was chosen with evidence. It does not prove real-world accuracy: the scripts come from the same person who wrote the patterns, so the test is honest about calibration (how closely the tool's decisions line up with known answers) but not independent of the builder.
+**What a good scorecard proves.** That decisions were checked against known answers, that failures are visible, and that the threshold was chosen with evidence. It does not prove real-world accuracy: the scripts come from the same person who wrote the patterns, so the test is honest about calibration (how closely the tool's decisions line up with known answers) but not independent of the builder. Calibration outcome: scam caught 7/7, genuine passed 3/3, caution 0, errors 0, flat across thresholds 0.45-0.65; test scripts and patterns were both written by the builder (not imported).
 
 ## 9. Scam-call generator design
 
@@ -241,26 +241,27 @@ One PDF per check, generated on demand from the stored record.
 | Limitations | The four limitations from Section 15, in short form, including that a mismatch is not proof of synthetic audio |
 | Footer | Generated date, "local interface, cloud inference via Gnani", page number |
 
-Styling stays plain: one accent colour, a readable sans-serif (plain lettering without the small decorative strokes), tables that fit A4 width. No logo work before the pipeline works.
+Styling stays plain: one accent colour, a readable sans-serif (plain lettering without the small decorative strokes), tables that fit A4 width. Evidence PDFs use Nirmala font (`C:\Windows\Fonts\Nirmala.ttc`) with uharfbuzz shaping for native Devanagari. No logo work before the pipeline works.
 
 ## 12. Folder structure
 
-Proposed layout after the build. **Proposed — adjust during the build** as real modules appear.
+As-built layout after the build.
 
 ```
 gnani-voice-app\
-├── app.py                  Streamlit entry point (replaces the old 18-line command-line menu)
-├── config.py               thresholds, model names, voices, paths
-├── gnani.py                text_to_speech(), speech_to_text()
-├── voiceprint.py           get_embedding(), parse_embedding(), cosine()
-├── engine\                 layer1.py, layer2.py, claim.py, score.py, pipeline.py
-├── generator\              scripts.py (Hinglish templates), generate.py (TTS + phone effect)
-├── selftest\               harness.py (battery runner), scorecard.py (metrics + PDF)
-├── reports\                incident_pdf.py, out\ (generated PDFs)
+├── app.py
+├── config.py
+├── gnani.py
+├── voiceprint.py
+├── engine\                 layer1.py, layer2.py, claim.py, score.py, pipeline.py, __init__.py
+├── generator\              scripts.py (Hinglish templates), generate.py (TTS + phone effect), __init__.py
+├── selftest\               harness.py (battery runner), scorecard.py (metrics + PDF), __init__.py, scorecard_pdfs\
+├── reports\                incident_pdf.py, __init__.py, out\ (generated PDFs)
 ├── data\                   voiceprints.json, incidents.json, scenarios.json,
-│                           selftest_runs.json, patterns.json
-├── samples\                generated WAV files
-└── docs\                   this document set
+│                           selftest_runs.json, patterns.json, embedding_cache.json, stt_cache.json
+├── samples\                13 generated WAVs + embeddings.json
+├── docs\                   this document set
+└── README.md
 ```
 
 ## 13. Error handling
@@ -285,13 +286,19 @@ Settings live in `config.py` as named constants, optionally readable from `confi
 
 | Setting | Default | Note |
 |---|---|---|
-| `IDENTITY_THRESHOLD` | 0.55 | Initial value, tune with the Self-Test Harness |
-| `LAYER1_WEIGHT` / `LAYER2_WEIGHT` | 0.5 / 0.5 | Equal until the scorecard argues otherwise |
+| `APP_VERSION` | `"0.1.0"` | Shown in UI header and PDF footer |
+| `THRESHOLD` | 0.55 | Layer 1 identity match cutoff; tune with Self-Test Harness |
+| `W_L1` / `W_L2` | 0.5 / 0.5 | Composite score weights; equal until scorecard argues otherwise |
+| `LAYER2_DIVISOR` | 0.8 | Sum of Layer 2 hit weights that saturates Layer 2 risk at 1.0 |
+| `BAND_CUTOFFS` | `(30, 60)` | Composite bands: [0,30) low, [30,60) caution, [60,100] high |
+| `STT_MODEL` / `LANGUAGE_CODE` | `prisma-v3.0` / `indic-auto` | Prisma STT model and language |
 | `TIMBRE_MODEL` / `TIMBRE_VOICE_DEFAULT` | `timbre-v2.5` / `Nalini` | `TIMBRE_VOICES` = `["Nalini", "Deepak"]` |
-| `PRISMA_MODEL` / `PRISMA_LANGUAGE` | `prisma-v3.0` / `indic-auto` | |
 | `EMBEDDING_DIM` | 768 | Sanity check on every parsed vector |
-| `DATA_DIR` / `SAMPLES_DIR` / `PATTERNS_PATH` | `data\` / `samples\` / `data\patterns.json` | JSON collections, generated WAVs, editable phrase list |
-| `REPORT_DIR` | `reports\out\` | Generated PDFs |
+| `DATA_DIR` / `SAMPLES_DIR` | `data\` / `samples\` | JSON collections, generated WAVs |
+| `PATTERNS_PATH` | `data\patterns.json` | Editable phrase list |
+| `VOICEPRINTS_PATH` / `INCIDENTS_PATH` | `data\voiceprints.json` / `data\incidents.json` | Enrolled voices, incident log |
+| `EMBEDDING_CACHE_PATH` / `STT_CACHE_PATH` | `data\embedding_cache.json` / `data\stt_cache.json` | Local caches, re-running a check never re-bills |
+| `DEFAULT_VOICEPRINT_ID` | `None` | Fallback voiceprint; `None` = first enrolled record |
 
 **The API key is never a config value.** It stays in `GNANI_API_KEY`, read at call time. Nothing in `config.py`, `data\`, or the repo contains it, and `.gitignore` covers WAV outputs and any local secrets file.
 
@@ -314,11 +321,12 @@ Settings live in `config.py` as named constants, optionally readable from `confi
 |---|---|---|
 | Screen layout and tab names | Halted | Build step 4, once real labels exist |
 | Final storage engine | Default JSON, changeable | Revisit if a query needs joins or the log passes a few thousand rows |
-| Exact threshold | 0.55 as a starting point | Self-Test scorecard sweep |
+| Exact threshold | **RESOLVED** — 0.55 kept (sweep flat 0.45–0.65) | Self-Test scorecard sweep |
 | Pattern list contents | Six categories seeded | Add variants as generated scripts reveal gaps |
 | Layer 1 also comparing non-target voiceprints by default | Leaning yes, for context | Demo readability |
 | PDF styling and page count | Plain, one to two pages | Build step 5 |
 | Phone-line effect strength | Light band-limit plus noise | Listen to a sample before the demo |
+| Layer weights | **RESOLVED** — stayed 0.5/0.5 (pattern growth earned the result, no weight change) | Self-Test scorecard sweep |
 
 ---
 

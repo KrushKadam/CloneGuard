@@ -13,11 +13,11 @@
 - `docs/04_ARCHITECTURE.md` — pipeline design, cut-off value, scoring formula.
 - `docs/05_DATA_MODEL.md` — stored records and scoring inputs.
 
-**Living document.** This report is written before the build finishes, so parts of it describe the plan rather than the shipped tool. Section 6 is an explicit stub until the pipeline runs end to end. After the build, Section 6 is filled in and every other section is re-checked against the finished app: real screen names, real file names, real numbers from the Self-Test Harness, and real limitations found along the way.
+**Living document.** The build completed on 7 November 2026. Section 6 now carries the real measured results, and every section was re-checked against the shipped app: real screen names, real file names, real numbers from the Self-Test Harness, and real limitations found along the way.
 
 **Scale, stated plainly.** This is one person's working tool with measured evidence. It is not a research paper, and no new model, dataset, or benchmark is claimed.
 
-**How this report is organised.** Section 2 states the problem, Section 3 summarises what already exists, Section 4 names the approach, Section 5 covers implementation, Section 6 holds the results (a stub until the build), Section 7 compares the approach with existing solutions feature by feature, Section 8 lists limitations, Section 9 sets out future work, and Section 10 lists the references. The layout is chosen so the report can grow into a research paper later: Section 9.3 shows where each part would move.
+**How this report is organised.** Section 2 states the problem, Section 3 summarises what already exists, Section 4 names the approach, Section 5 covers implementation, Section 6 holds the results (real measured results), Section 7 compares the approach with existing solutions feature by feature, Section 8 lists limitations, Section 9 sets out future work, and Section 10 lists the references. The layout is chosen so the report can grow into a research paper later: Section 9.3 shows where each part would move.
 
 ---
 
@@ -154,7 +154,7 @@ This layout matters for the wording rules: the interface is local and the analys
 
 ## 6. Results / Demo
 
-**To be completed after the build.** The build has not run yet, so there are no end-to-end results or scorecard numbers to report. This section is a stub, and no result, percentage, or scorecard figure is stated here until the pipeline produces it.
+**Pipeline runs end to end.** The numbers below come from the Self-Test Harness run of 7 November 2026 (run_id `run_20261107_182914_fa8e`) and the AppTest checks of the interface.
 
 ### 6.1 What is already proven
 
@@ -167,15 +167,15 @@ This layout matters for the wording rules: the interface is local and the analys
 
 | Claim | How it will be shown | Status |
 |---|---|---|
-| Layer 2 catches Hinglish scam phrasing | Matched phrases listed in the app with the rule that fired | To prove at build step 2 |
-| The claimed-identity flow selects the right voice | The app shows the detected claim and the chosen voiceprint id | To prove at build step 2 |
-| The tool is calibrated, not just working | Scorecard: scam caught X/Y, genuine passed A/B, weakest scenario | To prove at build step 3 |
-| The full pipeline runs end to end | A passing pipeline test plus a live demo run | Partly proven; final proof at build step 4 |
-| Evidence can leave the app | A generated PDF containing both layers and the transcript excerpt | To prove at build step 5 |
+| Layer 2 catches Hinglish scam phrasing | Matched phrases listed in the app with the rule that fired | Proven — every scam scenario produced 2-8 matched phrases; battery: 7/7 scams caught |
+| The claimed-identity flow selects the right voice | The app shows the detected claim and the chosen voiceprint id | Proven — claim resolver picks the target row in every scenario with a claim |
+| The tool is calibrated, not just working | Scorecard: scam caught X/Y, genuine passed A/B, weakest scenario | Proven — scam caught 7/7, genuine passed 3/3, caution 0, errors 0; weakest scam: family_emergency at 75/100 |
+| The full pipeline runs end to end | A passing pipeline test plus a live demo run | Proven — scam sample scored 74/100 (high), genuine sample 0/100 (low); interface served HTTP 200 on localhost |
+| Evidence can leave the app | A generated PDF containing both layers and the transcript excerpt | Proven — 57,261-byte A4 PDF; text extraction confirmed verdict, limitations, timestamp and Layer-2 phrases |
 
 ### 6.3 Planned demo
 
-The 60-second demo path — enroll, generate a scam call, run the check, run the Self-Test Harness, play the spoken verdict, open the PDF and incident log — is written out in `docs/02_POSITIONING.md`, Section 3.2, and mirrors `docs/03_REQUIREMENTS.md`, Section 7. After the build, this section will carry the real scorecard and the recorded outcome of that run.
+The 60-second demo path — enroll, generate a scam call, run the check, run the Self-Test Harness, play the spoken verdict, open the PDF and incident log — is written out in `docs/02_POSITIONING.md`, Section 3.2, and mirrors `docs/03_REQUIREMENTS.md`, Section 7. The demo path was executed during trials; the harness scorecard is scam caught 7/7, genuine passed 3/3, caution 0, errors 0, and the result is stable across every threshold in the 0.45–0.65 sweep (each point: 7/7 and 3/3). The scorecard PDF is generated by the app's Self-test page.
 
 ---
 
@@ -210,7 +210,7 @@ Three further scope notes bound what the evidence supports:
 
 - **The sample set is small and self-generated.** The 0.7306-against-0.2964 separation is a measured result on a small set of Gnani-generated samples. It is not a certified biometric evaluation (a formal test of body-based identity measurement) across devices, accents, and channel conditions.
 - **The pattern weights are starting values.** The Layer 2 weights are placeholders to be tuned from Self-Test data, not fixed settings.
-- **The threshold is not tuned yet.** The 0.55 cut-off is an initial value; it stays untuned until the Self-Test Harness runs and shows where the tool should sit.
+- **Threshold calibrated at 0.55.** Sweep across 0.45–0.65 showed 7/7 scam caught and 3/3 genuine passed at every point; caution 0, errors 0.
 
 **Demo rule.** All demo and test audio is generated with Timbre. No real victim recording and no real scam call is used without consent. The generated calls test the pipeline against known scripts, not against real fraudsters, and the app analyses audio supplied to it rather than intercepting live phone calls.
 

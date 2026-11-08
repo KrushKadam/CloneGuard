@@ -79,7 +79,7 @@ Eight features. This is the list to use in the submission and the demo. Do not a
 
 ### 3.1 Evidence status
 
-The measured number available in the repository is the voiceprint separation: same-speaker cosine **0.7306**, different-speaker **0.2964**, gap **0.4342** (from `voiceprint_test.py`). The Self-Test Harness is the mechanism that produces the rest of the evidence at demo time: it generates the calls, runs them, and reports the calibration.
+The measured number available in the repository is the voiceprint cosine similarity gap: same-speaker **0.7306**, different-speaker **0.2964**, gap **0.4342** (from `voiceprint_test.py`). Layer 1 is plain cosine comparison of embeddings — no dedicated voice-analysis/separation model was shipped. The Self-Test Harness is the mechanism that produces the rest of the evidence at demo time: it generates the calls, runs them, and reports the calibration.
 
 Do not quote a detection accuracy that has not been produced by a completed harness run. Quote the scorecard instead.
 
