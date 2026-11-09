@@ -1,2 +1,9 @@
 ﻿__pycache__/
 *.pyc
+.env
+data/voiceprints.json
+data/incidents.json
+data/embedding_cache.json
+data/stt_cache.json
+data/selftest_runs.json
+reports/out/

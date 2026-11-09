@@ -120,6 +120,8 @@ def save_upload(uploaded):
     data = uploaded.getvalue() if hasattr(uploaded, "getvalue") else uploaded.read()
     if not data:
         raise ValueError("audio file is empty")
+    if len(data) > 25 * 1024 * 1024:
+        raise ValueError("File is larger than 25 MB. Use a shorter recording.")
     path = temp_path()
     with open(path, "wb") as handle:
         handle.write(data)
@@ -409,7 +411,7 @@ def render_check_page():
     left, right = st.columns(2)
     with left:
         uploaded = st.file_uploader(
-            "Upload a call recording (WAV) from your device", type=["wav"], key="check_upload"
+            "Upload a call recording (WAV) from your device", type=["wav"], key="check_upload", max_upload_size=25
         )
     with right:
         names = sample_files()
@@ -429,6 +431,7 @@ def render_check_page():
             if uploaded is not None:
                 path = save_upload(uploaded)
             elif picked:
+                picked = os.path.basename(picked)
                 path = os.path.join(config.SAMPLES_DIR, picked)
                 if not os.path.exists(path):
                     raise FileNotFoundError(path)
@@ -572,6 +575,7 @@ def render_enroll_page():
         "Voice sample (WAV file)",
         type=["wav"],
         key="enroll_upload",
+        max_upload_size=25,
     )
 
     if st.button("Enroll or replace voiceprint", type="primary"):

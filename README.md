@@ -68,6 +68,8 @@ Voice measurements are from `voiceprint_test.py` (deterministic — the same aud
   ```
 - Or add `GNANI_API_KEY` as a system environment variable and restart the terminal.
 
+Never commit your real key: do not paste it into files you push, and prefer setting it as a system environment variable over typing it in a terminal (terminal history can store it).
+
 **Run the app**
 ```bash
 streamlit run app.py
