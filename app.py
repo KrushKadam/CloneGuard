@@ -35,11 +35,11 @@ from engine import score as score_mod
 TEMP_DIR = os.path.join(tempfile.gettempdir(), "cloneguard_ui")
 
 PAGES = [
-    "Check a call",
-    "Spoken verdict",
-    "Enroll a voice",
-    "Self-test",
-    "Incident log",
+    "🔍 Check a call",
+    "🔊 Spoken verdict",
+    "👤 Enroll a voice",
+    "🧪 Self-test",
+    "📋 Incident log",
 ]
 
 VERDICT_VOICES = ["Nalini", "Deepak"]
@@ -53,7 +53,7 @@ LIMITATIONS = [
     "mismatch, and a human impersonator produces the same flag.",
     "The analysis runs on Gnani's cloud APIs. Audio leaves this machine and "
     "the app needs an internet connection.",
-    "\"No patterns matched\" means the phrase list did not match. It does not "
+    '"No patterns matched" means the phrase list did not match. It does not '
     "mean the call is safe.",
 ]
 
@@ -183,7 +183,8 @@ def sidebar():
     st.sidebar.title("CloneGuard")
     st.sidebar.caption("Identity and language risk check for a supplied call recording.")
 
-    page = st.sidebar.radio("Section", PAGES, key="page")
+    page = st.sidebar.radio("Choose a page:", PAGES, key="page")
+    page = page.split(" ", 1)[1]
 
     st.sidebar.divider()
     try:
@@ -248,8 +249,7 @@ def layer1_panel(result):
         )
     else:
         st.info(
-            "No voiceprints are enrolled, so Layer 1 was not scored. Enroll a "
-            "voice in the Enroll section."
+            "No voiceprints are enrolled, so Layer 1 was not scored. Enroll a voice in the Enroll section."
         )
 
     claim = result.get("claim") or {}
@@ -390,9 +390,10 @@ def evidence_panel(result):
 
 def render_check_page():
     st.subheader("Check a call")
-    st.info(
-        "This run uses about 2 Gnani API calls (transcription + voiceprint)."
-    )
+    st.caption(
+        "Upload a recording and see if the caller's voice matches an enrolled person, "
+        "and find any scam phrases the caller used. This page runs about 2 calls to "
+        "Gnani's APIs (transcription plus voice identity check).")
 
     if api_key_present():
         st.caption(
@@ -408,7 +409,7 @@ def render_check_page():
     left, right = st.columns(2)
     with left:
         uploaded = st.file_uploader(
-            "Upload a call recording (WAV)", type=["wav"], key="check_upload"
+            "Upload a call recording (WAV) from your device", type=["wav"], key="check_upload"
         )
     with right:
         names = sample_files()
@@ -422,7 +423,7 @@ def render_check_page():
     if uploaded is not None and picked:
         st.caption("Both are set, so the uploaded file is used.")
 
-    if st.button("Run check", type="primary"):
+    if st.button("Run the check", type="primary"):
         path = None
         try:
             if uploaded is not None:
@@ -489,7 +490,7 @@ def render_check_page():
 
 def render_spoken_page():
     st.subheader("Spoken verdict")
-    st.caption("A Timbre voice reads the verdict sentence aloud. One Gnani API call per play.")
+    st.caption("Hear the verdict read aloud. Uses one Gnani API call to speak the text.")
 
     result = st.session_state.get("check_result")
     if not result:
@@ -502,9 +503,9 @@ def render_spoken_page():
 
     left, right = st.columns([1, 1])
     with left:
-        voice = st.selectbox("Voice", VERDICT_VOICES, key="verdict_voice")
+        voice = st.selectbox("Voice with Timbre", VERDICT_VOICES, key="verdict_voice")
     with right:
-        play = st.button("Play spoken verdict", type="primary")
+        play = st.button("Play the verdict aloud", type="primary")
 
     spoken = st.session_state.get("spoken_verdict")
     if play:
@@ -546,21 +547,20 @@ def render_spoken_page():
 
 def render_enroll_page():
     st.subheader("Enroll a voice")
-
     flash = st.session_state.pop("enroll_flash", None)
     if flash:
         st.success(flash)
-
     st.caption(
-        "A voiceprint is a 768-number fingerprint of how a person sounds. A new "
-        "audio file costs one Gnani embedding call; audio already cached costs none."
+        "Create a voiceprint so the check can compare the caller to a trusted person. "
+        "Voiceprint is a 768-number feature file of how a person sounds. A new audio "
+        "file costs one embedding call; audio already cached costs none."
     )
 
     left, right = st.columns(2)
     with left:
-        name = st.text_input("Name", placeholder="Nalini", key="enroll_name")
+        name = st.text_input("Name for this person", placeholder="Nalini", key="enroll_name")
     with right:
-        role = st.text_input("Role", placeholder="Papa", key="enroll_role")
+        role = st.text_input("Role in the context", placeholder="Papa", key="enroll_role")
 
     st.caption(
         "The role is matched against claim phrases in the transcript. The engine "
@@ -569,7 +569,7 @@ def render_enroll_page():
     )
 
     uploaded = st.file_uploader(
-        "Voice sample (WAV)",
+        "Voice sample (WAV file)",
         type=["wav"],
         key="enroll_upload",
     )
@@ -731,7 +731,7 @@ def render_selftest_page():
             "Gnani API calls; audio already cached costs none." % scenario_count
         )
 
-    if harness is not None and st.button("Run self-test battery", type="primary"):
+    if harness is not None and st.button("Run the self-test battery", type="primary"):
         with st.spinner("Running the self-test battery. This can take a minute..."):
             try:
                 run = harness.run_battery()
@@ -833,8 +833,8 @@ def incident_rows(entries):
 def render_incident_page():
     st.subheader("Incident log")
     st.caption(
-        "Every completed check is appended to data\\incidents.json, so the log "
-        "survives a restart. No audio is stored in this log."
+        "Every completed check is listed here for reference. The log stays when you "
+        "restart the app, but no audio is stored in it."
     )
 
     try:
@@ -860,14 +860,14 @@ def render_incident_page():
                 parse_time(entry.get("checked_at") or entry.get("created_at"))
                 for entry in entries
             )
-            if parsed is not None
+            if parsed is None
         }
     )
 
     if dates:
         first_day, last_day = dates[0], dates[-1]
         picked = st.date_input(
-            "Date range",
+            "Date range filter",
             value=(first_day, last_day),
             min_value=first_day,
             max_value=last_day,
