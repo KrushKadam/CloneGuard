@@ -47,6 +47,7 @@ The demo path and the video storyboard live in `docs/02_POSITIONING.md`, Section
 | `06_INNOVATION_REPORT.md` | The narrative report: problem, approach, measured results, limitations. | Done (living). Section 6 carries the completed calibration run. | Submission, ownership evidence |
 | `README.md` | The GitHub front page. Sits at the repository root and is the one document allowed outside `docs\`. | Done (rewritten, 71634b5) | Public repo landing page, judges |
 | Contest pack (post + video script + submission answers) | The three public artifacts the contest asks for. Kept together in `docs\`. | Done (docs/07_CONTEST_PACK.md, 71634b5) | LinkedIn/X post, 60-second video, submission form |
+| `security/` | Security audit folder: threat model, attack surface, secrets policy, checklist, full audit report. | Done (9 November 2026) | Public repo transparency, ownership evidence |
 
 **Halted for now (deliberately not written yet):**
 
