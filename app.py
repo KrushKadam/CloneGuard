@@ -908,6 +908,493 @@ def render_incident_page():
 
 
 # ---------------------------------------------------------------------------
+# Design system CSS (injected before any st.* calls)
+# ---------------------------------------------------------------------------
+st.markdown("""
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Martian+Mono:wght@400;500;700&display=swap');
+
+:root {
+  --bg-page: #07080d;
+  --bg-card: #0b0d15;
+  --bg-surface: #161a2b;
+  --border-dim: rgba(255,255,255,0.10);
+  --border-bright: rgba(var(--accent-rgb), 0.6);
+  --text-primary: #ffffff;
+  --text-secondary: #e2e8f0;
+  --text-muted: #94a3b8;
+  --text-dim: #64748b;
+
+  --accent-indigo: #818cf8;
+  --accent-indigo-rgb: 129,140,248;
+  --accent-rgb: 129,140,248;
+  --accent-cyan: #22d3ee;
+  --accent-cyan-rgb: 34,211,238;
+  --accent-emerald: #34d399;
+  --accent-emerald-rgb: 52,211,153;
+  --accent-fuchsia: #e879f9;
+  --accent-fuchsia-rgb: 232,121,249;
+  --accent-amber: #fbbf24;
+  --accent-amber-rgb: 251,191,36;
+
+  --font-mono: 'Martian Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  --font-sans: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+
+  --fs-xs: 0.75rem;
+  --fs-sm: 0.875rem;
+  --fs-base: 1rem;
+  --fs-lg: 1.125rem;
+  --fs-xl: 1.25rem;
+  --fs-2xl: 1.5rem;
+  --fs-3xl: 2rem;
+  --fs-4xl: 3rem;
+
+  --fw-normal: 400;
+  --fw-medium: 500;
+  --fw-semibold: 600;
+  --fw-bold: 700;
+
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 24px;
+  --border-width: 1px;
+
+  --glow-static: radial-gradient(240px circle at 50% 0%, rgba(var(--accent-rgb), 0.08), transparent 70%);
+  --glow-inner: radial-gradient(200px circle at 50% 50%, rgba(var(--accent-rgb), 0.14), transparent 65%);
+  --grid-pattern: linear-gradient(rgba(255,255,255,0.08) 1px, transparent 1px),
+                  linear-gradient(90deg, rgba(255,255,255,0.08) 1px, transparent 1px);
+
+  --dur-pulse: 1.6s;
+  --dur-slide: 0.3s;
+  --dur-blink: 1s steps(2);
+  --dur-ring: 1.2s cubic-bezier(.4,0,.2,1);
+  --dur-fade: 0.3s;
+}
+
+/* Page background */
+.stApp {
+  background: var(--bg-page);
+  background-image: var(--grid-pattern);
+  background-size: 26px 26px;
+  color: var(--text-secondary);
+}
+
+/* Sidebar */
+section[data-testid="stSidebar"] {
+  background: var(--bg-card);
+  border-right: var(--border-width) solid var(--border-dim);
+}
+section[data-testid="stSidebar"] .stMarkdown,
+section[data-testid="stSidebar"] .stCaption,
+section[data-testid="stSidebar"] .stText,
+section[data-testid="stSidebar"] label,
+section[data-testid="stSidebar"] .stRadio label {
+  color: var(--text-secondary) !important;
+}
+
+/* Headers */
+h1, h2, h3, h4, h5, h6 {
+  color: var(--text-primary) !important;
+  font-family: var(--font-sans) !important;
+}
+.stTitle, .stHeader, .stSubheader {
+  color: var(--text-primary) !important;
+}
+
+/* Tabular numbers on ALL numeric readouts */
+.tabular-nums,
+[data-testid="stMetricValue"],
+[data-testid="stMetricDelta"],
+.stMetric label + div,
+.stDataFrame td,
+.stTable td {
+  font-variant-numeric: tabular-nums;
+  font-family: var(--font-mono) !important;
+}
+
+/* Metric cards */
+[data-testid="stMetric"] {
+  background: var(--bg-card);
+  border: var(--border-width) solid var(--border-dim);
+  border-radius: var(--radius-lg);
+  padding: var(--space-4) var(--space-5);
+  min-height: 200px;
+  background-image: var(--glow-static), var(--glow-inner);
+  background-blend-mode: normal, normal;
+  transition: border-color var(--dur-fade), box-shadow var(--dur-fade);
+}
+[data-testid="stMetric"]:hover {
+  border-color: rgba(var(--accent-indigo-rgb), 0.6);
+  box-shadow: 0 0 0 1px rgba(var(--accent-indigo-rgb), 0.6), 0 8px 32px rgba(0,0,0,0.4);
+}
+[data-testid="stMetricLabel"] {
+  color: var(--text-muted) !important;
+  font-size: var(--fs-xs) !important;
+  font-weight: var(--fw-medium) !important;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+[data-testid="stMetricValue"] {
+  color: var(--text-primary) !important;
+  font-size: var(--fs-4xl) !important;
+  font-weight: var(--fw-bold) !important;
+  line-height: 1.1;
+}
+
+/* Buttons */
+.stButton > button,
+.stDownloadButton > button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-4);
+  border-radius: var(--radius-sm);
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-semibold);
+  font-family: var(--font-sans);
+  border: var(--border-width) solid transparent;
+  cursor: pointer;
+  transition: all var(--dur-fade);
+}
+.stButton > button[kind="primary"],
+.stDownloadButton > button[kind="primary"] {
+  background: var(--accent-indigo);
+  color: var(--bg-page);
+}
+.stButton > button[kind="primary"]:hover,
+.stDownloadButton > button[kind="primary"]:hover {
+  background: #93a0f9;
+}
+.stButton > button[kind="secondary"],
+.stButton > button:not([kind="primary"]),
+.stDownloadButton > button:not([kind="primary"]) {
+  background: transparent;
+  border-color: var(--border-dim);
+  color: var(--text-secondary);
+}
+.stButton > button[kind="secondary"]:hover,
+.stButton > button:not([kind="primary"]):hover,
+.stDownloadButton > button:not([kind="primary"]):hover {
+  border-color: rgba(var(--accent-indigo-rgb), 0.6);
+  background: rgba(255,255,255,0.05);
+}
+.stButton > button:focus-visible,
+.stDownloadButton > button:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--bg-page), 0 0 0 4px rgba(var(--accent-indigo-rgb), 0.6);
+}
+
+/* Form inputs */
+.stTextInput input,
+.stTextArea textarea,
+.stSelectbox [data-baseweb="select"],
+.stFileUploader,
+.stDateInput input,
+.stNumberInput input {
+  background: var(--bg-surface) !important;
+  border: var(--border-width) solid var(--border-dim) !important;
+  border-radius: var(--radius-sm) !important;
+  color: var(--text-primary) !important;
+  font-family: var(--font-sans) !important;
+}
+.stTextInput input:focus,
+.stTextArea textarea:focus,
+.stSelectbox [data-baseweb="select"]:focus,
+.stFileUploader:focus-within,
+.stDateInput input:focus,
+.stNumberInput input:focus {
+  border-color: rgba(var(--accent-indigo-rgb), 0.6) !important;
+  box-shadow: 0 0 0 2px rgba(var(--accent-indigo-rgb), 0.3) !important;
+}
+.stTextInput label,
+.stTextArea label,
+.stSelectbox label,
+.stFileUploader label,
+.stDateInput label,
+.stNumberInput label,
+.stRadio label,
+.stCheckbox label {
+  color: var(--text-secondary) !important;
+  font-size: var(--fs-sm) !important;
+  font-weight: var(--fw-medium) !important;
+}
+
+/* File uploader */
+.stFileUploader {
+  background: var(--bg-card) !important;
+  border: var(--border-width) solid var(--border-dim) !important;
+  border-radius: var(--radius-lg) !important;
+  padding: var(--space-4) var(--space-5) !important;
+}
+.stFileUploader:hover {
+  border-color: rgba(var(--accent-indigo-rgb), 0.6);
+}
+
+/* Dataframes and tables */
+.stDataFrame,
+.stTable {
+  background: var(--bg-card) !important;
+  border: var(--border-width) solid var(--border-dim) !important;
+  border-radius: var(--radius-lg) !important;
+  overflow: hidden;
+}
+.stDataFrame [data-testid="stDataFrameContainer"],
+.stTable [data-testid="stTableContainer"] {
+  background: var(--bg-card) !important;
+}
+.stDataFrame th,
+.stTable th {
+  background: var(--bg-surface) !important;
+  color: var(--text-primary) !important;
+  font-weight: var(--fw-semibold) !important;
+  font-size: var(--fs-xs) !important;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  border-bottom: var(--border-width) solid var(--border-dim) !important;
+}
+.stDataFrame td,
+.stTable td {
+  color: var(--text-secondary) !important;
+  font-size: var(--fs-sm) !important;
+  border-bottom: var(--border-width) solid var(--border-dim) !important;
+}
+.stDataFrame tr:hover td,
+.stTable tr:hover td {
+  background: rgba(255,255,255,0.03) !important;
+}
+
+/* Expanders */
+.stExpander {
+  background: var(--bg-card) !important;
+  border: var(--border-width) solid var(--border-dim) !important;
+  border-radius: var(--radius-lg) !important;
+  overflow: hidden;
+}
+.stExpander summary {
+  background: var(--bg-surface) !important;
+  color: var(--text-primary) !important;
+  font-weight: var(--fw-semibold) !important;
+  padding: var(--space-3) var(--space-4) !important;
+}
+.stExpander summary:hover {
+  background: rgba(255,255,255,0.05) !important;
+}
+.stExpanderContent {
+  padding: var(--space-4) var(--space-5) !important;
+  color: var(--text-secondary) !important;
+}
+
+/* Alerts (success, info, warning, error) */
+.stAlert {
+  border-radius: var(--radius-md) !important;
+  border: var(--border-width) solid transparent !important;
+  padding: var(--space-3) var(--space-4) !important;
+}
+.stSuccess {
+  background: rgba(var(--accent-emerald-rgb), 0.15) !important;
+  border-color: rgba(var(--accent-emerald-rgb), 0.3) !important;
+  color: var(--accent-emerald) !important;
+}
+.stInfo {
+  background: rgba(var(--accent-cyan-rgb), 0.15) !important;
+  border-color: rgba(var(--accent-cyan-rgb), 0.3) !important;
+  color: var(--accent-cyan) !important;
+}
+.stWarning {
+  background: rgba(var(--accent-amber-rgb), 0.15) !important;
+  border-color: rgba(var(--accent-amber-rgb), 0.3) !important;
+  color: var(--accent-amber) !important;
+}
+.stError {
+  background: rgba(var(--accent-fuchsia-rgb), 0.15) !important;
+  border-color: rgba(var(--accent-fuchsia-rgb), 0.3) !important;
+  color: var(--accent-fuchsia) !important;
+}
+
+/* Caption and muted text */
+.stCaption,
+.stMarkdown small,
+[data-testid="stCaptionContainer"] {
+  color: var(--text-muted) !important;
+  font-size: var(--fs-xs) !important;
+}
+
+/* Divider */
+hr, .stDivider {
+  border-color: var(--border-dim) !important;
+}
+
+/* Radio */
+.stRadio [role="radiogroup"] {
+  gap: var(--space-2) !important;
+}
+.stRadio label {
+  background: var(--bg-card) !important;
+  border: var(--border-width) solid var(--border-dim) !important;
+  border-radius: var(--radius-sm) !important;
+  padding: var(--space-2) var(--space-3) !important;
+  color: var(--text-secondary) !important;
+  transition: all var(--dur-fade) !important;
+}
+.stRadio label:hover,
+.stRadio [aria-checked="true"] {
+  border-color: rgba(var(--accent-indigo-rgb), 0.6) !important;
+  background: rgba(255,255,255,0.05) !important;
+  color: var(--text-primary) !important;
+}
+
+/* Tabs */
+.stTabs [data-baseweb="tab-list"] {
+  gap: var(--space-2) !important;
+  background: var(--bg-card) !important;
+  border-bottom: var(--border-width) solid var(--border-dim) !important;
+  padding: var(--space-2) var(--space-3) !important;
+  border-radius: var(--radius-md) var(--radius-md) 0 0 !important;
+}
+.stTabs [data-baseweb="tab"] {
+  background: transparent !important;
+  color: var(--text-muted) !important;
+  font-size: var(--fs-sm) !important;
+  font-weight: var(--fw-medium) !important;
+  padding: var(--space-1) var(--space-3) !important;
+  border-radius: var(--radius-sm) !important;
+  transition: all var(--dur-fade) !important;
+}
+.stTabs [data-baseweb="tab"]:hover,
+.stTabs [aria-selected="true"] {
+  color: var(--text-primary) !important;
+  background: rgba(255,255,255,0.05) !important;
+}
+.stTabs [aria-selected="true"]::after {
+  background: var(--accent-indigo) !important;
+}
+
+/* Spinner */
+.stSpinner > div {
+  border-top-color: var(--accent-indigo) !important;
+}
+
+/* Terminal panel style for code/pre blocks (block-level only) */
+pre code, .stCodeBlock {
+  font-family: var(--font-mono) !important;
+  font-size: var(--fs-sm) !important;
+  line-height: 1.6 !important;
+  background: rgba(0,0,0,0.30) !important;
+  border: 1px solid rgba(255,255,255,0.05) !important;
+  border-radius: var(--radius-md) !important;
+  padding: var(--space-4) !important;
+  color: var(--text-secondary) !important;
+  overflow-x: auto !important;
+  display: block !important;
+}
+
+/* Inline code: subtle treatment, no terminal box */
+:not(pre) > code {
+  font-family: var(--font-mono) !important;
+  font-size: 0.9em !important;
+  background: rgba(129,140,248,0.12) !important;
+  color: var(--accent-indigo) !important;
+  padding: 0.15em 0.4em !important;
+  border-radius: var(--radius-sm) !important;
+}
+
+/* Terminal-style prompt coloring */
+.terminal-prompt { color: var(--accent-fuchsia); }
+.terminal-ok { color: var(--accent-emerald); }
+.terminal-info { color: var(--text-muted); }
+.terminal-url { color: var(--accent-cyan); }
+.terminal-error { color: var(--accent-amber); }
+
+/* Badges */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  padding: 2px var(--space-2);
+  border-radius: 999px;
+  font-size: var(--fs-xs);
+  font-weight: var(--fw-semibold);
+  font-family: var(--font-mono);
+}
+.badge--low { background: rgba(var(--accent-emerald-rgb), 0.15); color: var(--accent-emerald); }
+.badge--caution { background: rgba(var(--accent-amber-rgb), 0.15); color: var(--accent-amber); }
+.badge--high { background: rgba(var(--accent-fuchsia-rgb), 0.15); color: var(--accent-fuchsia); }
+.badge--info { background: rgba(var(--accent-cyan-rgb), 0.15); color: var(--accent-cyan); }
+
+/* Live dot */
+.live-dot {
+  width: 8px; height: 8px; border-radius: 50%;
+  background: var(--accent-emerald);
+  animation: pulse var(--dur-pulse) ease-in-out infinite;
+}
+@keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.4; } }
+
+/* Glow card for containers */
+.glow-card {
+  background: var(--bg-card);
+  border: var(--border-width) solid var(--border-dim);
+  border-radius: var(--radius-lg);
+  padding: var(--space-4) var(--space-5);
+  position: relative;
+  overflow: hidden;
+  min-height: 200px;
+  background-image: var(--glow-static), var(--glow-inner);
+  background-blend-mode: normal, normal;
+  transition: border-color var(--dur-fade), box-shadow var(--dur-fade);
+}
+.glow-card:hover {
+  border-color: rgba(var(--accent-indigo-rgb), 0.6);
+  box-shadow: 0 0 0 1px rgba(var(--accent-indigo-rgb), 0.6), 0 8px 32px rgba(0,0,0,0.4);
+}
+.glow-card:focus-within {
+  border-color: rgba(var(--accent-indigo-rgb), 0.6);
+  box-shadow: 0 0 0 2px rgba(var(--accent-indigo-rgb), 0.6);
+}
+
+/* Responsive card heights */
+@media (max-width: 639px) {
+  .glow-card { min-height: 180px; }
+  [data-testid="stMetric"] { min-height: 180px; }
+}
+@media (min-width: 640px) and (max-width: 1023px) {
+  .glow-card { min-height: 200px; }
+  [data-testid="stMetric"] { min-height: 200px; }
+}
+@media (min-width: 1024px) {
+  .glow-card { min-height: 200px; }
+  [data-testid="stMetric"] { min-height: 200px; }
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Fade-in for cards */
+@keyframes fade-in {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.stMetric, .stExpander, .stDataFrame, .stFileUploader {
+  animation: fade-in var(--dur-fade) ease-out;
+}
+
+</style>
+""", unsafe_allow_html=True)
+
+# ---------------------------------------------------------------------------
 # Entry point
 # ---------------------------------------------------------------------------
 
