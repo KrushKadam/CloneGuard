@@ -176,7 +176,7 @@ Not building these. Each one is a deliberate cut, not an oversight.
 | **No microphone** | Every demo and test audio file is generated with Timbre. No real user voice is recorded. |
 | **Cloud inference** | Inference (the analysis work) runs on Gnani's cloud APIs (web services), so the app needs internet access and audio leaves the machine. The key is read from the environment variable `GNANI_API_KEY` (a named setting stored by the operating system) and sent as the `X-API-Key-ID` header; it is never written into a file or a screenshot. |
 | **5,000-credit budget** | Spend on real feature tests. Do not burn credits on repeated exploratory calls; cache results where possible. |
-| **Solo developer** | One builder, one pipeline, and a single AI coding assistant with no VS Code Copilot. This keeps the code style and the commit history consistent. |
+| **Single code pipeline** | One pipeline and one AI coding assistant with no VS Code Copilot. This keeps the code style and the commit history consistent. |
 | **Deadline: 10 November 2026** | The demo path matters more than feature count. Features that need a second person are out of scope. |
 | **Input conditions** | Audio is Hinglish and code-mixed (two languages inside one sentence), and is degraded with phone-line noise on purpose. The tool is tested under those conditions, not on clean studio speech. |
 

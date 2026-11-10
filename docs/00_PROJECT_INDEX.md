@@ -28,7 +28,7 @@ The interface runs locally at `localhost` (your own computer). The analysis itse
 | Required deliverable 3 | A 60-second video |
 | Hashtags (mandatory) | `#GnaniAI` `#GreatIndianAIInternshipChallenge` |
 | Contest | Gnani AI — Great Indian AI Internship Challenge |
-| Team size | One person (solo build) |
+| Team size | Two people (registered team of two) |
 
 The demo path and the video storyboard live in `docs/02_POSITIONING.md`, Section 3.2.
 

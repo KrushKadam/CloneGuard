@@ -1,7 +1,7 @@
 # CloneGuard — Innovation Report
 
 **Prepared:** 4 November 2026
-**Author:** solo build, Gnani AI — Great Indian AI Internship Challenge
+**Author:** team of two, Gnani AI — Great Indian AI Internship Challenge
 **Document status:** Sections 1–5 and 7–10 drafted 4 November 2026. Section 6 awaits the build.
 
 **Companion documents:**
@@ -15,7 +15,7 @@
 
 **Living document.** The build completed on 7 November 2026. Section 6 now carries the real measured results, and every section was re-checked against the shipped app: real screen names, real file names, real numbers from the Self-Test Harness, and real limitations found along the way.
 
-**Scale, stated plainly.** This is one person's working tool with measured evidence. It is not a research paper, and no new model, dataset, or benchmark is claimed.
+**Scale, stated plainly.** This is a two-person team's working tool with measured evidence. It is not a research paper, and no new model, dataset, or benchmark is claimed.
 
 **How this report is organised.** Section 2 states the problem, Section 3 summarises what already exists, Section 4 names the approach, Section 5 covers implementation, Section 6 holds the results (real measured results), Section 7 compares the approach with existing solutions feature by feature, Section 8 lists limitations, Section 9 sets out future work, and Section 10 lists the references. The layout is chosen so the report can grow into a research paper later: Section 9.3 shows where each part would move.
 

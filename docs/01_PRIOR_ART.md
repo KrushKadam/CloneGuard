@@ -1,7 +1,7 @@
 # CloneGuard — Prior Art & Competitive Analysis
 
 **Prepared:** 4 November 2026  
-**Author:** CloneGuard project (solo build)  
+**Author:** CloneGuard project (team of two)  
 **Purpose:** answer the question "hasn't this been done?" with sources instead of assertion.  
 **Companion document:** `docs/02_POSITIONING.md`
 
