@@ -1,6 +1,6 @@
 import os, sys, requests
 
-ROOT = r"C:\Users\kkyea\OneDrive\Documents\GitHub\gnani-voice-app"
+ROOT = os.path.dirname(os.path.abspath(__file__))
 KEY = os.environ.get("GNANI_API_KEY")
 
 print("Workspace:", ROOT)

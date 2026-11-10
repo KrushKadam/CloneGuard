@@ -52,13 +52,23 @@ Voice measurements are from `voiceprint_test.py` (deterministic — the same aud
 
 ---
 
+## Screenshots
+
+| Page | Screenshot |
+|---|---|
+| Check a call | ![Check a call](artifacts/screenshots/page-1-check-a-call.png) |
+| Spoken verdict | ![Spoken verdict](artifacts/screenshots/page-2-spoken-verdict.png) |
+| Enroll a voice | ![Enroll a voice](artifacts/screenshots/page-3-enroll-a-voice.png) |
+| Self-test | ![Self-test](artifacts/screenshots/page-4-self-test.png) |
+| Incident log | ![Incident log](artifacts/screenshots/page-5-incident-log.png) |
+
 ## Quick start
 
 **Prerequisites**
 - Python 3.14+
 - Install dependencies:
   ```bash
-  pip install streamlit fpdf2 pypdf uharfbuzz fonttools
+  pip install -r requirements.txt
   ```
 
 **Set your Gnani API key**
@@ -92,5 +102,7 @@ These are the boundaries of what the evidence supports. They are stated in the U
 ## Project links
 
 - **Entry point:** [`docs/00_PROJECT_INDEX.md`](docs/00_PROJECT_INDEX.md) — session rules, build order, critical numbers, and navigation to all documents.
+- [Artifacts — evidence bundle for judges](artifacts/)
+- [Fresh-machine end-to-end test prompt](docs/08_E2E_TEST_PROMPT.md)
 - Built for the **Gnani AI Great Indian AI Internship Challenge** (deadline 10 November 2026).
 - Mandatory hashtags: `#GnaniAI` `#GreatIndianAIInternshipChallenge`
