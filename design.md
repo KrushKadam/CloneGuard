@@ -66,7 +66,9 @@ opacity: 0.15;
 .data-readout { font-family: var(--font-mono); font-variant-numeric: tabular-nums; font-size: var(--fs-h1); font-weight: var(--fw-medium); color: var(--text-primary); }
 ```
 
-**FONT SWEEP RULE:** Chakra Petch on 100% of elements via broad hammer rule early in sheet; Martian Mono re-asserted AFTER hammer on numeric/code targets only (metrics, dataframes, tables, code blocks, `.data-readout`, tabular-nums selectors). Result: Chakra Petch everywhere except numbers/code = Martian Mono. No font SIZE changes (title clamp/caption 14px/body 16px rules stay as-is).
+### FONT SWEEP RULE
+
+Chakra Petch on 100% of elements via broad hammer rule early in sheet; Martian Mono re-asserted AFTER hammer on numeric/code targets only (metrics, dataframes, tables, code blocks, `.data-readout`, tabular-nums selectors). Result: Chakra Petch everywhere except numbers/code = Martian Mono. No font SIZE changes (title clamp/caption 14px/body 16px rules stay as-is).
 
 ### Spacing (generous whitespace scale)
 
@@ -81,6 +83,7 @@ opacity: 0.15;
 ## 2. Component Patterns (Streamlit-targeted CSS)
 
 ### 2.1 DotGridBackground
+
 ```css
 .stApp {
   background-color: var(--bg-page);
@@ -94,6 +97,7 @@ opacity: 0.15;
 ```
 
 ### 2.2 DisplayHeading (giant thin uppercase)
+
 ```css
 .display-heading {
   font-family: var(--font-display); font-weight: var(--fw-light);
@@ -105,6 +109,7 @@ opacity: 0.15;
 ```
 
 ### 2.3 CaptionBlock (tiny muted side text)
+
 ```css
 .caption-block {
   font-family: var(--font-body); font-size: var(--fs-caption);
@@ -114,6 +119,7 @@ opacity: 0.15;
 ```
 
 ### 2.4 NavButtons (real sidebar buttons, full width, primary for active)
+
 ```css
 .nav-buttons { display: flex; flex-direction: column; gap: var(--space-2); padding: var(--space-2) 0; }
 .nav-buttons button {
@@ -127,20 +133,24 @@ opacity: 0.15;
 .nav-buttons button[aria-current="page"] { background: var(--accent-green); color: var(--bg-page); border-color: var(--accent-green); }
 .nav-buttons button[aria-current="page"]:hover { background: var(--accent-green-hi); opacity: 0.9; }
 ```
+
 **No emojis in labels.** Labels = plain page names: "Check a call", "Spoken verdict", "Enroll a voice", "Self-test", "Incident log". "Choose a page:" caption rendered above buttons.
 
 ### 2.5 HairlineSeparator
+
 ```css
 .hairline { height: 1px; background: var(--hairline); border: 0; margin: var(--space-4) 0; }
 .hairline--short { width: 60px; margin-left: 0; }
 ```
 
 ### 2.6 SmallCapsMeta
+
 ```css
 .meta-line { font-family: var(--font-body); font-size: var(--fs-small); font-weight: var(--fw-medium); text-transform: lowercase; letter-spacing: 0.08em; color: var(--text-muted); }
 ```
 
 ### 2.7 Wordmark/Logo (bold-italic top-left)
+
 ```css
 .wordmark {
   font-family: var(--font-display); font-weight: var(--fw-semibold);
@@ -150,6 +160,7 @@ opacity: 0.15;
 ```
 
 ### 2.8 DataReadout (mono numbers only)
+
 ```css
 .data-readout { font-family: var(--font-mono); font-variant-numeric: tabular-nums; font-size: var(--fs-h1); font-weight: var(--fw-medium); color: var(--text-primary); line-height: 1.1; }
 .data-readout--sm { font-size: var(--fs-h2); }
@@ -157,6 +168,7 @@ opacity: 0.15;
 ```
 
 ### 2.9 VerticalSideLabel (rotated 90deg right edge)
+
 ```css
 .side-label {
   position: fixed; right: 0; top: 50%; transform: translateY(-50%) rotate(90deg);
@@ -167,6 +179,7 @@ opacity: 0.15;
 ```
 
 ### 2.10 EmptyStateCTA (Spoken verdict page)
+
 ```python
 # Single button added to empty state:
 st.button(
@@ -175,9 +188,11 @@ st.button(
     on_click=lambda: st.session_state.update({"page": "Check a call"}),
 )
 ```
+
 Label exactly "Open Check a call". Only NEW widget added.
 
 ### 2.11 Alert Overrides (ALL Streamlit defaults overridden to palette)
+
 - **Info** → grayscale: dark gray bg `#0a0a0a`, white text, gray border (`var(--text-muted)`)
 - **Success** → matrix green: green-tinted bg `rgba(46,255,106,0.10)`, text `#2eff6a`, green border
 - **Warning** → grayscale: gray border (`var(--text-dim)`), white text — amber/orange FORBIDDEN
@@ -235,6 +250,7 @@ Label exactly "Open Check a call". Only NEW widget added.
 ## 5. Streamlit Implementation Notes
 
 ### CSS Injection (single block, BEFORE any `st.*` call)
+
 ```python
 st.markdown("""
 <style>
@@ -245,6 +261,7 @@ st.markdown("""
 ```
 
 ### `.streamlit/config.toml`
+
 ```toml
 [theme]
 base = "dark"
@@ -270,6 +287,7 @@ font = "sans serif"
 ## 6. Do / Don't (Anti-AI-Slop)
 
 ### Do
+
 - Extreme type-scale contrast: giant display (300 weight) + tiny caption (12px)
 - Generous whitespace; hairline rules (`1px`, `rgba(255,255,255,0.12)`)
 - **One accent family only** (matrix green: `#2eff6a` primary, `#1cc24b` dim, `#62ff94` hi)
@@ -278,9 +296,10 @@ font = "sans serif"
 - `prefers-reduced-motion` respected; opacity-only transitions
 - **Real sidebar buttons** (full width, `type="primary"` for active, no emojis)
 - **All Streamlit defaults overridden** — no leaked blues/reds/ambers
-- **Text labels never overlap** (QA: check uploader/expander/buttons visually)
+- **Text labels never overlap** (QA: check uploader/expander/buttons visually on all 5 pages)
 
 ### Don't
+
 - ❌ Glow cards, radial accent gradients, glassmorphism/backdrop-blur
 - ❌ Rainbow accent palettes (v1 had 6 accents — v2 has ONE family: matrix green)
 - ❌ **Emoji nav** — nav labels are plain text only ("Check a call", not "🔍 Check a call"). Tab icon `🛡️` in `set_page_config` is fine.
@@ -302,6 +321,7 @@ font = "sans serif"
 - [ ] **Text labels never overlap** (QA: check uploader/expander/buttons visually on all 5 pages)
 - [ ] Empty-state CTA on Spoken verdict: "Open Check a call" button navigates to Check page
 - [ ] Single accent family `#2eff6a`/`#1cc24b`/`#62ff94` used sparingly (active nav, primary buttons, focus, links, spinner, progress, success alerts, checkbox/radio accents)
+- [ ] **Material icons render as glyph icons — no ligature words (upload, keyboard_arrow_right) visible as text anywhere**
 - [ ] Hairline separators: `1px solid rgba(255,255,255,0.12)`
 - [ ] `prefers-reduced-motion` disables all transitions
 - [ ] Phone (320px): single column, display ~60px, captions stacked
@@ -312,4 +332,5 @@ font = "sans serif"
 - [ ] **Banned words:** "AI-cloned voice"=0, "detects AI-cloned"=0, "deepfake"=0, `synthetic` EXACTLY 1
 - [ ] No v1 tokens (`--glow-static`, `--accent-indigo`, `--radius-lg`, `Martian Mono` on headings) remain
 - [ ] **Radio count = 0** (replaced by buttons)
+- [ ] **Material icons render as glyph icons — no ligature words (upload, keyboard_arrow_right) visible as text anywhere**
 - [ ] All 5 pages render with 0 exceptions; original content widgets preserved
