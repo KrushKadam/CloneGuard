@@ -991,6 +991,36 @@ section[data-testid="stSidebar"] .stRadio label {
   font-family: var(--font-body) !important;
 }
 
+/* Hide sidebar title — main content has the only title */
+section[data-testid="stSidebar"] h1,
+section[data-testid="stSidebar"] .stTitle {
+  display: none;
+}
+
+/* Compact sidebar vertical rhythm — no scroll at ~700px viewport */
+section[data-testid="stSidebar"] {
+  padding-top: var(--space-2) !important;
+  padding-bottom: var(--space-2) !important;
+  padding-left: var(--space-3) !important;
+  padding-right: var(--space-3) !important;
+}
+section[data-testid="stSidebar"] .stCaption {
+  margin-top: var(--space-1) !important;
+  margin-bottom: var(--space-1) !important;
+  line-height: 1.3 !important;
+}
+section[data-testid="stSidebar"] .stRadio [role="radiogroup"] {
+  gap: var(--space-1) !important;
+  padding: var(--space-1) 0 !important;
+}
+section[data-testid="stSidebar"] .stRadio label {
+  padding: var(--space-1) 0 !important;
+}
+section[data-testid="stSidebar"] hr,
+section[data-testid="stSidebar"] .stDivider {
+  margin: var(--space-2) 0 !important;
+}
+
 /* ============================================================
    DISPLAY HEADINGS — giant thin uppercase (Archivo 300)
    ============================================================ */
