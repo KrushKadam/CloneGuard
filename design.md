@@ -33,21 +33,21 @@ opacity: 0.15;
 ### Typography
 
 ```css
-/* Archivo (display + body) + Martian Mono (numbers only) — single request */
-@import url('https://fonts.googleapis.com/css2?family=Archivo:wght@300;400;500;600&family=Martian+Mono:wght@400;500&display=swap');
+/* Chakra Petch (display + body) + Martian Mono (numbers only) — single request */
+@import url('https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@300;400;500;600;700&family=Martian+Mono:wght@400;500&display=swap');
 
 :root {
-  --font-display: 'Archivo', system-ui, -apple-system, Segoe UI, sans-serif;
-  --font-body:    'Archivo', system-ui, -apple-system, Segoe UI, sans-serif;
+  --font-display: 'Chakra Petch', system-ui, -apple-system, Segoe UI, sans-serif;
+  --font-body:    'Chakra Petch', system-ui, -apple-system, Segoe UI, sans-serif;
   --font-mono:    'Martian Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
 }
 
 /* Display scale — giant thin uppercase */
---fs-display: clamp(3.75rem, 12vw, 10rem);   /* 60px → 160px */
---fs-h1:      clamp(2.5rem, 6vw, 5rem);      /* 40px → 80px */
---fs-h2:      clamp(1.5rem, 3vw, 3rem);      /* 24px → 48px */
+--fs-display: clamp(2.5rem, 8vw, 6.5rem);   /* 40px → 104px */
+--fs-h1:      clamp(1.75rem, 4.5vw, 3.25rem);      /* 28px → 52px */
+--fs-h2:      clamp(1.25rem, 3vw, 2.25rem);      /* 20px → 36px */
 --fs-body:    1rem;                          /* 16px */
---fs-caption: 0.75rem;                       /* 12px */
+--fs-caption: 0.875rem;                      /* 14px */
 --fs-small:   0.875rem;                      /* 14px */
 
 /* Weights */
@@ -57,7 +57,7 @@ opacity: 0.15;
 --fw-semibold: 600;   /* active nav, strong */
 
 /* Display rule: uppercase + tracking-wide + leading-none */
-.display { font-family: var(--font-display); font-weight: var(--fw-light); text-transform: uppercase; letter-spacing: 0.1em; line-height: 1; }
+.display { font-family: var(--font-display); font-weight: var(--fw-light); text-transform: uppercase; letter-spacing: 0.05em; line-height: 1; }
 .caption  { font-family: var(--font-body);   font-size: var(--fs-caption); line-height: 1.25; color: var(--text-muted); max-width: 250px; }
 .small-caps { font-family: var(--font-body); font-size: var(--fs-small); font-weight: var(--fw-medium); text-transform: lowercase; letter-spacing: 0.08em; color: var(--text-muted); }
 .data-readout { font-family: var(--font-mono); font-variant-numeric: tabular-nums; font-size: var(--fs-h1); font-weight: var(--fw-medium); color: var(--text-primary); }
@@ -92,7 +92,7 @@ opacity: 0.15;
 ```css
 .display-heading {
   font-family: var(--font-display); font-weight: var(--fw-light);
-  font-size: var(--fs-display); line-height: 1; letter-spacing: 0.1em;
+  font-size: var(--fs-display); line-height: 1; letter-spacing: 0.05em;
   text-transform: uppercase; color: var(--text-primary); margin: 0;
 }
 .display-heading--h1 { font-size: var(--fs-h1); }
@@ -209,7 +209,7 @@ opacity: 0.15;
 ```python
 st.markdown("""
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Archivo:wght@300;400;500;600&family=Martian+Mono:wght@400;500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@300;400;500;600;700&family=Martian+Mono:wght@400;500&display=swap');
 /* Paste ALL tokens + components from Sections 1–2 here */
 </style>
 """, unsafe_allow_html=True)
@@ -243,8 +243,8 @@ font = "sans serif"
 - Extreme type-scale contrast: giant display (300 weight) + tiny caption (12px)
 - Generous whitespace; hairline rules (`1px`, `rgba(255,255,255,0.12)`)
 - One accent only (`#f43f5e`), optionally one orange highlight (`#ea580c`)
-- Uppercase + `letter-spacing: 0.1em` + `line-height: 1` on all display headings
-- Archivo for all prose/headings; Martian Mono **only** for numeric readouts
+- Uppercase + `letter-spacing: 0.05em` + `line-height: 1` on all display headings
+- Chakra Petch for all prose/headings; Martian Mono **only** for numeric readouts
 - `prefers-reduced-motion` respected; opacity-only transitions
 
 ### Don't
@@ -259,9 +259,9 @@ font = "sans serif"
 
 ## 7. QA Checklist
 
-- [ ] `Archivo` + `Martian Mono` load (Network tab: single Google Fonts request)
+- [ ] `Chakra Petch` + `Martian Mono` load (Network tab: single Google Fonts request)
 - [ ] Dot-grid: `radial-gradient(circle, white 1px, transparent 1px)` at `20px 20px`, `opacity: 0.15`
-- [ ] Display headings: `font-weight: 300`, `text-transform: uppercase`, `letter-spacing: 0.1em`, `line-height: 1`, `clamp(3.75rem, 12vw, 10rem)`
+- [ ] Display headings: `font-weight: 300`, `text-transform: uppercase`, `letter-spacing: 0.05em`, `line-height: 1`, `clamp(2.5rem, 8vw, 6.5rem)`
 - [ ] Captions: `12px`/`14px`, `#9ca3af`, `max-width: 250px`, stacked on phone / beside on laptop
 - [ ] Nav: muted inactive (`#9ca3af`), bright active (`#ffffff`, weight 600), `hover:opacity-60`
 - [ ] Single accent `#f43f5e` used sparingly (active nav underline or one icon)

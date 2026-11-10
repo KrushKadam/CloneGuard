@@ -912,7 +912,7 @@ def render_incident_page():
 # ---------------------------------------------------------------------------
 st.markdown("""
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Archivo:wght@300;400;500;600&family=Martian+Mono:wght@400;500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@300;400;500;600;700&family=Martian+Mono:wght@400;500&display=swap');
 
 :root {
   /* Color — monochrome + one accent */
@@ -927,15 +927,15 @@ st.markdown("""
   --hairline: rgba(255,255,255,0.12);
 
   /* Typography */
-  --font-display: 'Archivo', system-ui, -apple-system, Segoe UI, sans-serif;
-  --font-body: 'Archivo', system-ui, -apple-system, Segoe UI, sans-serif;
+  --font-display: 'Chakra Petch', system-ui, -apple-system, Segoe UI, sans-serif;
+  --font-body: 'Chakra Petch', system-ui, -apple-system, Segoe UI, sans-serif;
   --font-mono: 'Martian Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
 
-  --fs-display: clamp(3.75rem, 12vw, 10rem);
-  --fs-h1: clamp(2.5rem, 6vw, 5rem);
-  --fs-h2: clamp(1.5rem, 3vw, 3rem);
+  --fs-display: clamp(2.5rem, 8vw, 6.5rem);
+  --fs-h1: clamp(1.75rem, 4.5vw, 3.25rem);
+  --fs-h2: clamp(1.25rem, 3vw, 2.25rem);
   --fs-body: 1rem;
-  --fs-caption: 0.75rem;
+  --fs-caption: 0.875rem;
   --fs-small: 0.875rem;
 
   --fw-light: 300;
@@ -1022,14 +1022,14 @@ section[data-testid="stSidebar"] .stDivider {
 }
 
 /* ============================================================
-   DISPLAY HEADINGS — giant thin uppercase (Archivo 300)
+   DISPLAY HEADINGS — giant thin uppercase (Chakra Petch 300)
    ============================================================ */
 h1, h2, h3, h4, h5, h6,
 .stTitle, .stHeader, .stSubheader {
   font-family: var(--font-display) !important;
   font-weight: var(--fw-light) !important;
   text-transform: uppercase !important;
-  letter-spacing: 0.1em !important;
+  letter-spacing: 0.05em !important;
   line-height: 1 !important;
   color: var(--text-primary) !important;
   margin-top: 0 !important;
