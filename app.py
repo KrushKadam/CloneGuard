@@ -991,10 +991,7 @@ st.markdown("""
   font-family: var(--font-body) !important;
 }
 
-/* Restore Streamlit's Material Icons font for icon spans (after hammer wins) */
-[data-testid="stIconMaterial"] {
-  font-family: "Material Icons", sans-serif !important;
-}
+
 
 /* Re-assert Chakra Petch on previously excluded layout-critical elements
    (excluded from the hammer so their internal Streamlit positioning isn't broken,

@@ -321,7 +321,7 @@ font = "sans serif"
 - [ ] **Text labels never overlap** (QA: check uploader/expander/buttons visually on all 5 pages)
 - [ ] Empty-state CTA on Spoken verdict: "Open Check a call" button navigates to Check page
 - [ ] Single accent family `#2eff6a`/`#1cc24b`/`#62ff94` used sparingly (active nav, primary buttons, focus, links, spinner, progress, success alerts, checkbox/radio accents)
-- [ ] **Material icons render as glyph icons — no ligature words (upload, keyboard_arrow_right) visible as text anywhere**
+- [ ] Icon spans render as glyphs, not literal ligature words — computed font is Material Symbols Rounded (Streamlit's own) and scrollWidth equals boxWidth for every stIconMaterial span
 - [ ] Hairline separators: `1px solid rgba(255,255,255,0.12)`
 - [ ] `prefers-reduced-motion` disables all transitions
 - [ ] Phone (320px): single column, display ~60px, captions stacked
@@ -332,5 +332,5 @@ font = "sans serif"
 - [ ] **Banned words:** "AI-cloned voice"=0, "detects AI-cloned"=0, "deepfake"=0, `synthetic` EXACTLY 1
 - [ ] No v1 tokens (`--glow-static`, `--accent-indigo`, `--radius-lg`, `Martian Mono` on headings) remain
 - [ ] **Radio count = 0** (replaced by buttons)
-- [ ] **Material icons render as glyph icons — no ligature words (upload, keyboard_arrow_right) visible as text anywhere**
+- [ ] Icon spans render as glyphs, not literal ligature words — computed font is Material Symbols Rounded (Streamlit's own) and scrollWidth equals boxWidth for every stIconMaterial span
 - [ ] All 5 pages render with 0 exceptions; original content widgets preserved
