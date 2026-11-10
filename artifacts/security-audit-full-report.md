@@ -6,7 +6,7 @@
 **Target:** CloneGuard — local-only Streamlit desktop tool for voice impersonation and Hinglish scam detection in phone call recordings  
 **Source reference:** Repository at commit used for this run  
 **Execution boundary:** Source-only static review with sandboxed local execution for validation checks; no external network calls, no deployed endpoints  
-**Prior run used:** `security/audit-2026-11-09.md` (commits `8a0356c`, `e19a498`) — four prior confirmed fixes carried as `prior_confirmed_same_source`; one accepted risk (registry fallback) carried; open recommendations mapped to deferred/out-of-scope units  
+**Prior run used:** `security/audit-2026-11-09.md` (commits `1cdeb5a`, `8d0deb6`) — four prior confirmed fixes carried as `prior_confirmed_same_source`; one accepted risk (registry fallback) carried; open recommendations mapped to deferred/out-of-scope units  
 **Deferred / out of scope:** Encryption at rest for `voiceprints.json`, removal of registry fallback post-deadline, periodic `pip-audit`, upload limit reduction to 10 MB — all documented as accepted risk or deferred in prior run  
 **Budget / agents:** Phase 1 recon by `nemotron-ultra` (Google models refused the task class); Phase 2 three isolated hunters (`deepseek-v4.1-flash`, `glm-5.3-flash`, `nemotron-ultra`) — Hunter A 11 units / 0 candidates, Hunter B 11 units / 0 candidates, Hunter C 10 units / 7 candidates; Phase 3 fresh adversarial verifier (`glm-5.3-flash-free`) rejected all 7; manager spot-checked 2 disputes, verifier correct on both; Phase 4 validators PASS; Phase 5 independent fresh session (`nemotron-3.5-lightning-30b`) verified every file:line claim — ALL_RECORDS_ACCURATE  
 

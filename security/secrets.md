@@ -58,4 +58,4 @@ Expected output: **zero matches** (or only the placeholder `your-key-here` in RE
 - Key never logged by application code (boolean check only)
 
 ---
-*Secrets policy documented 9 November 2026. Matches code at commits `8a0356c`, `e19a498`.*
+*Secrets policy documented 9 November 2026. Matches code at commits `1cdeb5a`, `8d0deb6`.*

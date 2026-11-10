@@ -65,4 +65,4 @@ Disk Storage (local):
 | **Elevation of Privilege** | Local user escalates via app | App runs as current user; no sudo, no setuid, no network listeners beyond localhost |
 
 ---
-*Threat model written 9 November 2026. Matches code at commits `8a0356c`, `e19a498`.*
+*Threat model written 9 November 2026. Matches code at commits `1cdeb5a`, `8d0deb6`.*

@@ -109,4 +109,4 @@
 **Recommendation:** Use trusted network. For high-sensitivity environments, consider VPN or corporate egress proxy.
 
 ---
-*Attack surface documented 9 November 2026. File refs match `app.py`, `voiceprint.py`, `gnani.py`, `config.py`, `.gitignore` at commits `8a0356c`, `e19a498`.*
+*Attack surface documented 9 November 2026. File refs match `app.py`, `voiceprint.py`, `gnani.py`, `config.py`, `.gitignore` at commits `1cdeb5a`, `8d0deb6`.*

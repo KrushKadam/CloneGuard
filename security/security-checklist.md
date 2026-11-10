@@ -100,4 +100,4 @@ next-generation
 
 ---
 
-*Checklist created 9 November 2026. All commands verified against working tree at commits `8a0356c`, `e19a498`.*
+*Checklist created 9 November 2026. All commands verified against working tree at commits `1cdeb5a`, `8d0deb6`.*

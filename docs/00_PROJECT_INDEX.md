@@ -45,8 +45,8 @@ The demo path and the video storyboard live in `docs/02_POSITIONING.md`, Section
 | `04_ARCHITECTURE.md` | How the parts fit together: modules, data flow, API calls, failure handling. | Done (living; as-built sections) | Build steps 1–5 |
 | `05_DATA_MODEL.md` | What is stored, where, and in what shape (enrolled voices, checks, incidents). Also holds the storage-engine recommendation. | Done (living; field names checked against `data\`) | Build steps 1–5, incident log, PDF reports |
 | `06_INNOVATION_REPORT.md` | The narrative report: problem, approach, measured results, limitations. | Done (living). Section 6 carries the completed calibration run. | Submission, ownership evidence |
-| `README.md` | The GitHub front page. Sits at the repository root and is the one document allowed outside `docs\`. | Done (rewritten, 71634b5) | Public repo landing page, judges |
-| Contest pack (post + video script + submission answers) | The three public artifacts the contest asks for. Kept together in `docs\`. | Done (docs/07_CONTEST_PACK.md, 71634b5) | LinkedIn/X post, 60-second video, submission form |
+| `README.md` | The GitHub front page. Sits at the repository root and is the one document allowed outside `docs\`. | Done (rewritten, 12cd207) | Public repo landing page, judges |
+| Contest pack (post + video script + submission answers) | The three public artifacts the contest asks for. Kept together in `docs\`. | Done (docs/07_CONTEST_PACK.md, 12cd207) | LinkedIn/X post, 60-second video, submission form |
 | `security/` | Security audit folder: threat model, attack surface, secrets policy, checklist, full audit report. | Done (9 November 2026) | Public repo transparency, ownership evidence |
 
 **Halted for now (deliberately not written yet):**
@@ -114,17 +114,17 @@ No documentation files in the project root, with one exception: `README.md`, whi
 
 Follow this order. Each step produces something the next step can use.
 
-0. **Start the repository.** Create a private git repository (a version-controlled folder that records every change) and commit the whole `docs\` folder before writing code. This is the starting point of the ownership trail. **Done, `7bb8753`.**
-1. **Scam-call generator.** Produce scam and genuine call scripts in Hinglish, spoken by Timbre voices (Gnani's text-to-speech service, which turns written text into audio) with a phone-line noise effect. Every test file comes from here, because the machine has no microphone. **Done, `05eb0bf`:** seven scam families (including one scam with no urgency words) and three genuine calls, voiced by Nalini and Deepak, ten WAVs plus `data\scenarios.json`.
-2. **Detection engine, both layers.** Layer 1: enroll a voice, store its fingerprint, compare a new caller against it. Layer 2: transcribe with Prisma (Gnani's speech-to-text service) and scan for red-flag phrases. Combine into one score. **Done, `fbea884`:** threshold 0.55, a verified scam at 74/high against a genuine call at 0/low.
-3. **Self-Test Harness.** One button that generates a battery of scenarios with known answers (scam or genuine), runs them through the full pipeline, and prints a calibration scorecard (a report card comparing what the tool decided with what was true). **Done, `6725421`:** battery, scorecard, threshold sweep, and scorecard PDF export.
-4. **Streamlit UI.** Streamlit is a Python library that turns a script into a web page; it serves the app on `localhost`. Replace the old 18-line command-line menu in `app.py` with the real interface. **Done, `3d8a5d4`:** five sidebar pages plus a footer, verified with Streamlit's AppTest and a headless HTTP check.
-5. **PDF reports.** One shareable document per check (PDF opens the same way on any machine), containing both layer scores, the red-flag phrases, a transcript excerpt, and the verdict. **Done, `b9c62c6`:** A4 report with native Devanagari, verified by extracting the text with `pypdf`.
+0. **Start the repository.** Create a private git repository (a version-controlled folder that records every change) and commit the whole `docs\` folder before writing code. This is the starting point of the ownership trail. **Done, `4ac0838`.**
+1. **Scam-call generator.** Produce scam and genuine call scripts in Hinglish, spoken by Timbre voices (Gnani's text-to-speech service, which turns written text into audio) with a phone-line noise effect. Every test file comes from here, because the machine has no microphone. **Done, `8e1d710`:** seven scam families (including one scam with no urgency words) and three genuine calls, voiced by Nalini and Deepak, ten WAVs plus `data\scenarios.json`.
+2. **Detection engine, both layers.** Layer 1: enroll a voice, store its fingerprint, compare a new caller against it. Layer 2: transcribe with Prisma (Gnani's speech-to-text service) and scan for red-flag phrases. Combine into one score. **Done, `abd10ee`:** threshold 0.55, a verified scam at 74/high against a genuine call at 0/low.
+3. **Self-Test Harness.** One button that generates a battery of scenarios with known answers (scam or genuine), runs them through the full pipeline, and prints a calibration scorecard (a report card comparing what the tool decided with what was true). **Done, `1cb4cfb`:** battery, scorecard, threshold sweep, and scorecard PDF export.
+4. **Streamlit UI.** Streamlit is a Python library that turns a script into a web page; it serves the app on `localhost`. Replace the old 18-line command-line menu in `app.py` with the real interface. **Done, `34207bd`:** five sidebar pages plus a footer, verified with Streamlit's AppTest and a headless HTTP check.
+5. **PDF reports.** One shareable document per check (PDF opens the same way on any machine), containing both layer scores, the red-flag phrases, a transcript excerpt, and the verdict. **Done, `206e08c`:** A4 report with native Devanagari, verified by extracting the text with `pypdf`.
 6. **Public artifacts.** Record the 60-second video, publish the LinkedIn or X post with both hashtags, submit the entry. **Pending.**
 7. **Documentation pass.** Update every file in `docs\` to match the finished build. **Done in this pass** (working tree at the time of writing; not yet committed).
 8. **Ownership steps.** Run the post-build actions in Section 6. **Pending, user action.**
 
-Calibration sits between steps 5 and 7 and is recorded here because it changed the test numbers, not the code shape: commit `a94752a` raised the pattern list from 28 to 32 dual-script rules and re-ran the battery. Result: scam caught **7/7**, genuine passed **3/3**, caution **0**, errors **0**, flat across thresholds **0.45–0.65**. The score weights stayed at 0.5/0.5 because the run did not justify moving them.
+Calibration sits between steps 5 and 7 and is recorded here because it changed the test numbers, not the code shape: commit `8c2b76e` raised the pattern list from 28 to 32 dual-script rules and re-ran the battery. Result: scam caught **7/7**, genuine passed **3/3**, caution **0**, errors **0**, flat across thresholds **0.45–0.65**. The score weights stayed at 0.5/0.5 because the run did not justify moving them.
 
 ---
 
@@ -185,8 +185,8 @@ State these wherever the tool is described. They are not defects to hide; they a
 |---|---|---|
 | UI/UX visual design | Settled in build step 4: five sidebar pages (Check a call, Spoken verdict, Enroll a voice, Self-test, Incident log) plus a footer that carries the local/cloud line and the limitations. | Closed |
 | Storage engine (plain text files vs a small local database) | Settled: JSON files in `data\`. The record counts stayed small, so the database was not needed. | Closed |
-| README rewrite | Done (rewritten, 71634b5) | Closed/done with commit |
-| Contest pack (post, video script, submission answers) | Done (docs/07_CONTEST_PACK.md, 71634b5) | Closed/done with commit |
+| README rewrite | Done (rewritten, 12cd207) | Closed/done with commit |
+| Contest pack (post, video script, submission answers) | Done (docs/07_CONTEST_PACK.md, 12cd207) | Closed/done with commit |
 
 ---
 
