@@ -35,11 +35,11 @@ from engine import score as score_mod
 TEMP_DIR = os.path.join(tempfile.gettempdir(), "cloneguard_ui")
 
 PAGES = [
-    "🔍 Check a call",
-    "🔊 Spoken verdict",
-    "👤 Enroll a voice",
-    "🧪 Self-test",
-    "📋 Incident log",
+    "Check a call",
+    "Spoken verdict",
+    "Enroll a voice",
+    "Self-test",
+    "Incident log",
 ]
 
 VERDICT_VOICES = ["Nalini", "Deepak"]
@@ -185,8 +185,19 @@ def sidebar():
     st.sidebar.title("CloneGuard")
     st.sidebar.caption("Identity and language risk check for a supplied call recording.")
 
-    page = st.sidebar.radio("Choose a page:", PAGES, key="page")
-    page = page.split(" ", 1)[1]
+    st.sidebar.caption("Choose a page:")
+    if "page" not in st.session_state:
+        st.session_state.page = PAGES[0]
+
+    for i, page_name in enumerate(PAGES):
+        is_active = st.session_state.page == page_name
+        st.sidebar.button(
+            page_name,
+            key="nav_%d" % i,
+            on_click=lambda p=page_name: st.session_state.update({"page": p}),
+            type="primary" if is_active else "secondary",
+            use_container_width=True,
+        )
 
     st.sidebar.divider()
     try:
@@ -199,7 +210,7 @@ def sidebar():
     else:
         st.sidebar.error("GNANI_API_KEY missing")
     st.sidebar.caption("Interface local, analysis on Gnani's cloud APIs.")
-    return page
+    return st.session_state.page
 
 
 def render_footer():
@@ -395,7 +406,8 @@ def render_check_page():
     st.caption(
         "Upload a recording and see if the caller's voice matches an enrolled person, "
         "and find any scam phrases the caller used. This page runs about 2 calls to "
-        "Gnani's APIs (transcription plus voice identity check).")
+        "Gnani's APIs (transcription plus voice identity check)."
+    )
 
     if api_key_present():
         st.caption(
@@ -499,6 +511,11 @@ def render_spoken_page():
     if not result:
         st.info("Run a check, then the verdict can be spoken here.")
         st.markdown("**No verdict yet.** Open Check a call and run a check.")
+        st.button(
+            "Open Check a call",
+            key="cta_open_check",
+            on_click=lambda: st.session_state.update({"page": "Check a call"}),
+        )
         return
 
     sentence = result.get("verdict_sentence") or ""
@@ -782,6 +799,7 @@ def render_selftest_page():
             data=pdf["data"],
             file_name=pdf["name"],
             mime="application/pdf",
+            key="scorecard_download",
         )
     elif pdf:
         st.caption("The run changed. Prepare the PDF again for this run.")
@@ -864,7 +882,7 @@ def render_incident_page():
                 parse_time(entry.get("checked_at") or entry.get("created_at"))
                 for entry in entries
             )
-            if parsed is None
+            if parsed is not None
         }
     )
 
@@ -908,22 +926,23 @@ def render_incident_page():
 
 
 # ---------------------------------------------------------------------------
-# Design system CSS v2 — Swiss/editorial minimalism (injected before any st.* calls)
+# Design system CSS v2 — Matrix/opencode theme (injected before any st.* calls)
 # ---------------------------------------------------------------------------
 st.markdown("""
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@300;400;500;600;700&family=Martian+Mono:wght@400;500&display=swap');
 
 :root {
-  /* Color — monochrome + one accent */
+  /* Color — monochrome + matrix green only */
   --bg-page: #000000;
   --bg-card: #0a0a0a;
   --text-primary: #ffffff;
   --text-secondary: #e5e5e5;
   --text-muted: #9ca3af;
   --text-dim: #6b7280;
-  --accent-rose: #f43f5e;
-  --accent-orange: #ea580c;
+  --accent-green: #2eff6a;
+  --accent-green-dim: #1cc24b;
+  --accent-green-hi: #62ff94;
   --hairline: rgba(255,255,255,0.12);
 
   /* Typography */
@@ -938,10 +957,10 @@ st.markdown("""
   --fs-caption: 0.875rem;
   --fs-small: 0.875rem;
 
-  --fw-light: 300;
-  --fw-regular: 400;
-  --fw-medium: 500;
-  --fw-semibold: 600;
+  --fw-light: 700;   /* display headings — ensured 700 */
+  --fw-regular: 500;   /* body — 500 minimum */
+  --fw-medium: 600;   /* emphasis / labels / captions */
+  --fw-semibold: 700;   /* active nav, strong */
 
   /* Spacing */
   --space-1: 4px;
@@ -959,6 +978,41 @@ st.markdown("""
   --border-color: var(--hairline);
 }
 
+.stApp { font-weight: 500; }
+
+/* ============================================================
+}
+
+/* ============================================================
+   FONT HAMMER — Chakra Petch on ALL text, Martian Mono on numbers/code only
+   ============================================================ */
+.stApp,
+.stApp *:not(pre):not(code):not(.stCodeBlock *):not([data-testid="stMetricValue"]):not([data-testid="stMetricDelta"]):not(.stDataFrame td):not(.stTable td):not(.data-readout):not(button):not([role="button"]):not(.stExpander summary):not(.stFileUploader) {
+  font-family: var(--font-body) !important;
+}
+
+/* Re-assert Chakra Petch on previously excluded layout-critical elements
+   (excluded from the hammer so their internal Streamlit positioning isn't broken,
+   but font must still end up Chakra Petch) */
+.stApp button { font-family: var(--font-body) !important; }
+.stApp [role="button"] { font-family: var(--font-body) !important; }
+.stApp .stExpander summary { font-family: var(--font-body) !important; }
+.stApp .stFileUploader { font-family: var(--font-body) !important; }
+
+/* Re-assert Martian Mono on numeric/code targets (AFTER hammer so it wins at equal specificity) */
+[data-testid="stMetricValue"],
+[data-testid="stMetricDelta"],
+.stMetric label + div,
+.stDataFrame td,
+.stTable td,
+.data-readout,
+pre code,
+.stCodeBlock,
+:not(pre) > code {
+  font-family: var(--font-mono) !important;
+  font-variant-numeric: tabular-nums !important;
+}
+
 /* ============================================================
    PAGE BACKGROUND — dot grid (signature motif)
    ============================================================ */
@@ -968,7 +1022,6 @@ st.markdown("""
   background-size: 20px 20px;
   background-attachment: fixed;
   color: var(--text-secondary);
-  font-family: var(--font-body);
   font-size: var(--fs-body);
   font-weight: var(--fw-regular);
   line-height: 1.6;
@@ -985,10 +1038,8 @@ section[data-testid="stSidebar"] {
 section[data-testid="stSidebar"] .stMarkdown,
 section[data-testid="stSidebar"] .stCaption,
 section[data-testid="stSidebar"] .stText,
-section[data-testid="stSidebar"] label,
-section[data-testid="stSidebar"] .stRadio label {
+section[data-testid="stSidebar"] label {
   color: var(--text-secondary) !important;
-  font-family: var(--font-body) !important;
 }
 
 /* Hide sidebar title — main content has the only title */
@@ -1008,13 +1059,6 @@ section[data-testid="stSidebar"] .stCaption {
   margin-top: var(--space-1) !important;
   margin-bottom: var(--space-1) !important;
   line-height: 1.3 !important;
-}
-section[data-testid="stSidebar"] .stRadio [role="radiogroup"] {
-  gap: var(--space-1) !important;
-  padding: var(--space-1) 0 !important;
-}
-section[data-testid="stSidebar"] .stRadio label {
-  padding: var(--space-1) 0 !important;
 }
 section[data-testid="stSidebar"] hr,
 section[data-testid="stSidebar"] .stDivider {
@@ -1072,15 +1116,6 @@ h5, h6 { font-size: var(--fs-h1) !important; }
 /* ============================================================
    DATA READOUTS — Martian Mono, tabular nums, large
    ============================================================ */
-[data-testid="stMetricValue"],
-[data-testid="stMetricDelta"],
-.stMetric label + div,
-.stDataFrame td,
-.stTable td,
-.data-readout {
-  font-family: var(--font-mono) !important;
-  font-variant-numeric: tabular-nums !important;
-}
 [data-testid="stMetricValue"] {
   font-size: var(--fs-h1) !important;
   font-weight: var(--fw-medium) !important;
@@ -1118,7 +1153,47 @@ hr, .stDivider, .hairline {
 .hairline--short { width: 60px; margin-left: 0; }
 
 /* ============================================================
-   BUTTONS — minimal radius, rose accent for primary
+   NAV BUTTONS (sidebar) — full width, primary for active
+   ============================================================ */
+section[data-testid="stSidebar"] .stButton > button {
+  display: block !important;
+  width: 100% !important;
+  text-align: left !important;
+  justify-content: flex-start !important;
+  padding: 0.4rem 0.75rem !important;
+  border-radius: var(--radius-sm) !important;
+  font-size: var(--fs-small) !important;
+  font-weight: var(--fw-medium) !important;
+  font-family: var(--font-body) !important;
+  border: var(--border-w) solid transparent !important;
+  transition: opacity 0.2s ease, background-color 0.2s ease, border-color 0.2s ease !important;
+}
+section[data-testid="stSidebar"] .stButton > button[kind="primary"] {
+  background: #ffffff !important;
+  color: #000000 !important;
+  border-color: #ffffff !important;
+}
+section[data-testid="stSidebar"] .stButton > button[kind="primary"]:hover {
+  background: #e5e5e5 !important;
+  color: #000000 !important;
+  opacity: 0.9 !important;
+}
+section[data-testid="stSidebar"] .stButton > button:not([kind="primary"]) {
+  background: transparent !important;
+  border-color: transparent !important;
+  color: var(--text-secondary) !important;
+}
+section[data-testid="stSidebar"] .stButton > button:not([kind="primary"]):hover {
+  background: rgba(255,255,255,0.05) !important;
+  border-color: var(--text-dim) !important;
+}
+section[data-testid="stSidebar"] .stButton > button:focus-visible {
+  outline: none !important;
+  box-shadow: 0 0 0 2px var(--bg-page), 0 0 0 4px var(--accent-green) !important;
+}
+
+/* ============================================================
+   BUTTONS (main) — minimal radius, matrix green for primary
    ============================================================ */
 .stButton > button,
 .stDownloadButton > button {
@@ -1137,31 +1212,40 @@ hr, .stDivider, .hairline {
 }
 .stButton > button[kind="primary"],
 .stDownloadButton > button[kind="primary"] {
-  background: var(--accent-rose);
-  color: var(--text-primary);
-  border-color: var(--accent-rose);
+  background: #ffffff !important;
+  color: #000000 !important;
+  border-color: #ffffff !important;
 }
 .stButton > button[kind="primary"]:hover,
 .stDownloadButton > button[kind="primary"]:hover {
-  opacity: 0.85;
+  background: #e5e5e5 !important;
+  color: #000000 !important;
 }
 .stButton > button[kind="secondary"],
 .stButton > button:not([kind="primary"]),
 .stDownloadButton > button:not([kind="primary"]) {
-  background: transparent;
-  border-color: var(--hairline);
-  color: var(--text-secondary);
+  background: transparent !important;
+  color: #ffffff !important;
+  border: 1.5px solid #6b7280 !important;
 }
 .stButton > button[kind="secondary"]:hover,
 .stButton > button:not([kind="primary"]):hover,
 .stDownloadButton > button:not([kind="primary"]):hover {
-  background: rgba(255,255,255,0.05);
-  border-color: var(--text-dim);
+  background: rgba(255,255,255,0.05) !important;
+  border-color: #ffffff !important;
 }
 .stButton > button:focus-visible,
 .stDownloadButton > button:focus-visible {
   outline: none;
-  box-shadow: 0 0 0 2px var(--bg-page), 0 0 0 4px var(--accent-rose);
+  box-shadow: 0 0 0 2px var(--bg-page), 0 0 0 4px var(--accent-green);
+}
+
+/* Disabled buttons */
+.stButton > button:disabled,
+.stDownloadButton > button:disabled {
+  color: #6b7280 !important;
+  border-color: #6b7280 !important;
+  background: transparent !important;
 }
 
 /* ============================================================
@@ -1186,8 +1270,8 @@ hr, .stDivider, .hairline {
 .stFileUploader:focus-within,
 .stDateInput input:focus,
 .stNumberInput input:focus {
-  border-color: var(--accent-rose) !important;
-  box-shadow: 0 0 0 2px rgba(244,63,94,0.3) !important;
+  border-color: var(--accent-green) !important;
+  box-shadow: 0 0 0 2px rgba(46,255,106,0.3) !important;
 }
 .stTextInput label,
 .stTextArea label,
@@ -1285,54 +1369,103 @@ hr, .stDivider, .hairline {
 }
 
 /* ============================================================
-   ALERTS — muted backgrounds, rose for error focus
+   ALERTS — OVERRIDE ALL STREAMLIT DEFAULTS TO PALETTE
    ============================================================ */
-.stAlert {
+/* Modern data-testid selectors */
+[data-testid="stAlert"] {
   border-radius: var(--radius-none) !important;
   border: var(--border-w) solid var(--hairline) !important;
   padding: var(--space-3) var(--space-4) !important;
   background: var(--bg-card) !important;
   color: var(--text-secondary) !important;
 }
-.stSuccess { border-left: 3px solid var(--accent-orange) !important; }
-.stInfo { border-left: 3px solid var(--text-muted) !important; }
-.stWarning { border-left: 3px solid var(--accent-orange) !important; }
-.stError { border-left: 3px solid var(--accent-rose) !important; color: var(--text-secondary) !important; }
-
-/* ============================================================
-   RADIO (NAV) — text-nav style: muted inactive, bright active
-   ============================================================ */
-.stRadio [role="radiogroup"] {
-  display: flex !important;
-  flex-direction: column !important;
-  gap: var(--space-2) !important;
-  padding: var(--space-2) 0 !important;
+[data-testid="stAlert"] [data-testid="stMarkdownContainer"],
+[data-testid="stAlert"] p,
+[data-testid="stAlert"] svg {
+  color: var(--text-secondary) !important;
+  fill: var(--text-secondary) !important;
 }
-.stRadio label {
-  background: transparent !important;
-  border: 0 !important;
+
+/* Legacy class selectors */
+.stAlert,
+.stInfo,
+.stSuccess,
+.stWarning,
+.stError {
   border-radius: var(--radius-none) !important;
-  padding: var(--space-1) 0 !important;
-  color: var(--text-muted) !important;
-  font-family: var(--font-body) !important;
-  font-size: var(--fs-body) !important;
-  font-weight: var(--fw-regular) !important;
-  text-decoration: none !important;
-  white-space: nowrap !important;
-  transition: opacity 0.2s ease, color 0.2s ease !important;
-  cursor: pointer !important;
+  border: var(--border-w) solid var(--hairline) !important;
+  padding: var(--space-3) var(--space-4) !important;
+  background: var(--bg-card) !important;
+  color: var(--text-secondary) !important;
 }
-.stRadio label:hover {
-  opacity: 0.6 !important;
+
+/* Info → grayscale */
+.stInfo,
+[data-testid="stAlert"][kind="info"] {
+  border-left: 3px solid var(--text-muted) !important;
+  background: var(--bg-card) !important;
 }
-.stRadio [aria-checked="true"] {
+.stInfo [data-testid="stMarkdownContainer"],
+.stInfo p,
+.stInfo svg {
+  color: var(--text-secondary) !important;
+  fill: var(--text-secondary) !important;
+}
+
+/* Success → matrix green */
+.stSuccess,
+[data-testid="stAlert"][kind="success"] {
+  border-left: 3px solid var(--accent-green) !important;
+  background: rgba(46,255,106,0.10) !important;
+}
+.stSuccess [data-testid="stMarkdownContainer"],
+.stSuccess p,
+.stSuccess svg {
+  color: var(--accent-green) !important;
+  fill: var(--accent-green) !important;
+}
+
+/* Warning → grayscale (NO amber/orange) */
+.stWarning,
+[data-testid="stAlert"][kind="warning"] {
+  border-left: 3px solid var(--text-dim) !important;
+  background: var(--bg-card) !important;
+}
+.stWarning [data-testid="stMarkdownContainer"],
+.stWarning p,
+.stWarning svg {
+  color: var(--text-secondary) !important;
+  fill: var(--text-secondary) !important;
+}
+
+/* Error → grayscale (NO red) */
+.stError,
+[data-testid="stAlert"][kind="error"] {
+  border-left: 3px solid var(--text-primary) !important;
+  background: #050505 !important;
+}
+.stError [data-testid="stMarkdownContainer"],
+.stError p,
+.stError svg {
   color: var(--text-primary) !important;
+  fill: var(--text-primary) !important;
   font-weight: var(--fw-semibold) !important;
-  opacity: 1 !important;
+}
+
+/* Exception */
+[data-testid="stException"] {
+  background: #050505 !important;
+  border: var(--border-w) solid var(--text-dim) !important;
+  color: var(--text-secondary) !important;
+}
+[data-testid="stException"] code,
+[data-testid="stException"] pre {
+  background: var(--bg-card) !important;
+  color: var(--text-secondary) !important;
 }
 
 /* ============================================================
-   TABS — clean underline, rose for active
+   TABS — clean underline, matrix green for active
    ============================================================ */
 .stTabs [data-baseweb="tab-list"] {
   gap: var(--space-4) !important;
@@ -1359,15 +1492,15 @@ hr, .stDivider, .hairline {
   background: transparent !important;
 }
 .stTabs [aria-selected="true"]::after {
-  background: var(--accent-rose) !important;
+  background: var(--accent-green) !important;
   height: 2px !important;
 }
 
 /* ============================================================
-   SPINNER — rose
+   SPINNER — matrix green
    ============================================================ */
 .stSpinner > div {
-  border-top-color: var(--accent-rose) !important;
+  border-top-color: var(--accent-green) !important;
 }
 
 /* ============================================================
@@ -1388,8 +1521,8 @@ pre code, .stCodeBlock {
 :not(pre) > code {
   font-family: var(--font-mono) !important;
   font-size: 0.9em !important;
-  background: rgba(244,63,94,0.12) !important;
-  color: var(--accent-rose) !important;
+  background: rgba(255,255,255,0.08) !important;
+  color: var(--text-secondary) !important;
   padding: 0.15em 0.4em !important;
   border-radius: var(--radius-sm) !important;
 }
@@ -1407,6 +1540,63 @@ pre code, .stCodeBlock {
 }
 [data-testid="stMetric"]:hover {
   border-color: var(--text-dim) !important;
+}
+
+/* ============================================================
+   CHECKBOX & RADIO ACCENTS — matrix green
+   ============================================================ */
+.stCheckbox input[type="checkbox"]:checked,
+.stRadio input[type="radio"]:checked {
+  accent-color: var(--accent-green) !important;
+}
+
+/* ============================================================
+   LINKS IN MARKDOWN — matrix green
+   ============================================================ */
+.stMarkdown a {
+  color: var(--accent-green) !important;
+  text-decoration: none !important;
+}
+.stMarkdown a:hover {
+  text-decoration: underline !important;
+  color: var(--accent-green-hi) !important;
+}
+
+/* ============================================================
+   FOCUS RINGS — matrix green
+   ============================================================ */
+*:focus-visible {
+  outline: none !important;
+  box-shadow: 0 0 0 2px var(--bg-page), 0 0 0 4px var(--accent-green) !important;
+}
+
+/* ============================================================
+   ST.AUDIO CONTAINER BORDER
+   ============================================================ */
+.stAudio {
+  border: var(--border-w) solid var(--hairline) !important;
+  border-radius: var(--radius-none) !important;
+  background: var(--bg-card) !important;
+  padding: var(--space-2) !important;
+}
+
+/* ============================================================
+   TOOLTIPS — matrix green accent
+   ============================================================ */
+[data-testid="stTooltip"] {
+  background: var(--bg-card) !important;
+  border: var(--border-w) solid var(--hairline) !important;
+  color: var(--text-secondary) !important;
+}
+[data-testid="stTooltip"]::before {
+  border-bottom-color: var(--accent-green) !important;
+}
+
+/* ============================================================
+   PROGRESS BAR — matrix green
+   ============================================================ */
+.stProgress > div > div {
+  background: var(--accent-green) !important;
 }
 
 /* ============================================================
