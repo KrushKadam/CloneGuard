@@ -104,5 +104,7 @@ These are the boundaries of what the evidence supports. They are stated in the U
 - **Entry point:** [`docs/00_PROJECT_INDEX.md`](docs/00_PROJECT_INDEX.md) — session rules, build order, critical numbers, and navigation to all documents.
 - [Artifacts — evidence bundle for judges](artifacts/)
 - [Fresh-machine end-to-end test prompt](docs/08_E2E_TEST_PROMPT.md)
+- **One-page solution pitch:** [`docs/10_SOLUTION_PITCH.md`](docs/10_SOLUTION_PITCH.md) - the written explanation submitted with the entry.
+- **60-second demo video:** [`artifacts/videos/cloneguard-linkedin-demo.mp4`](artifacts/videos/cloneguard-linkedin-demo.mp4) - the contest demo, also attached to the LinkedIn post.
 - Built for the **Gnani AI Great Indian AI Internship Challenge** (deadline 10 November 2026).
 - Mandatory hashtags: `#GnaniAI` `#GreatIndianAIInternshipChallenge`

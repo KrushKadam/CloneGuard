@@ -38,7 +38,7 @@ The demo path and the video storyboard live in `docs/02_POSITIONING.md`, Section
 
 | File | What it is | Status | What it feeds |
 |---|---|---|---|
-| `00_PROJECT_INDEX.md` | This file. The entry point for anyone picking the project up. | Done (living, refreshed 7 November 2026) | Navigation, session rules, build order |
+| `00_PROJECT_INDEX.md` | This file. The entry point for anyone picking the project up. | Done (living, refreshed 11 November 2026) | Navigation, session rules, build order |
 | `01_PRIOR_ART.md` | Competitor and research sweep with sources and fetch dates. | Done | Judge answers, "hasn't this been done?" section, README |
 | `02_POSITIONING.md` | Canonical description, wording rules, 8-feature list, award mapping, demo path. | Done (one evidence line refreshed) | Every public sentence: README, post, video script, submission |
 | `03_REQUIREMENTS.md` | Plain-English requirements: what to build, acceptance criteria, evidence plan. | Done (living; acceptance boxes ticked only where evidence exists) | Build checklist, Definition of Done, submission answers |
@@ -47,6 +47,9 @@ The demo path and the video storyboard live in `docs/02_POSITIONING.md`, Section
 | `06_INNOVATION_REPORT.md` | The narrative report: problem, approach, measured results, limitations. | Done (living). Section 6 carries the completed calibration run. | Submission, ownership evidence |
 | `README.md` | The GitHub front page. Sits at the repository root and is the one document allowed outside `docs\`. | Done (rewritten, 12cd207) | Public repo landing page, judges |
 | Contest pack (post + video script + submission answers) | The three public artifacts the contest asks for. Kept together in `docs\`. | Done (docs/07_CONTEST_PACK.md, 12cd207) | LinkedIn/X post, 60-second video, submission form |
+| `08_E2E_TEST_PROMPT.md` | Fresh-machine end-to-end test procedure: run the whole test on a new machine. | Done (`c3c50e8`) | Reproducing the test, judge verification |
+| `09_E2E_TEST_RECORDING_PROMPT.md` | Prompt for recording the full end-to-end test video (the 9-minute run). | Done (`4ffa65b`) | The test-run video in `artifacts\videos\` |
+| `10_SOLUTION_PITCH.md` | One-page solution pitch: problem, solution, proof, stack, limitations, links. | Done (`1991b17`) | Submission form written explanation (field 5) |
 | `security/` | Security audit folder: threat model, attack surface, secrets policy, checklist, full audit report. | Done (9 November 2026) | Public repo transparency, ownership evidence |
 
 **Halted for now (deliberately not written yet):**
@@ -120,9 +123,9 @@ Follow this order. Each step produces something the next step can use.
 3. **Self-Test Harness.** One button that generates a battery of scenarios with known answers (scam or genuine), runs them through the full pipeline, and prints a calibration scorecard (a report card comparing what the tool decided with what was true). **Done, `1cb4cfb`:** battery, scorecard, threshold sweep, and scorecard PDF export.
 4. **Streamlit UI.** Streamlit is a Python library that turns a script into a web page; it serves the app on `localhost`. Replace the old 18-line command-line menu in `app.py` with the real interface. **Done, `34207bd`:** five sidebar pages plus a footer, verified with Streamlit's AppTest and a headless HTTP check.
 5. **PDF reports.** One shareable document per check (PDF opens the same way on any machine), containing both layer scores, the red-flag phrases, a transcript excerpt, and the verdict. **Done, `206e08c`:** A4 report with native Devanagari, verified by extracting the text with `pypdf`.
-6. **Public artifacts.** Record the 60-second video, publish the LinkedIn or X post with both hashtags, submit the entry. **Pending.**
-7. **Documentation pass.** Update every file in `docs\` to match the finished build. **Done in this pass** (working tree at the time of writing; not yet committed).
-8. **Ownership steps.** Run the post-build actions in Section 6. **Pending, user action.**
+6. **Public artifacts.** Record the 60-second video, publish the LinkedIn or X post with both hashtags, submit the entry. **Done:** demo video recorded and pushed (`885a0f2`), LinkedIn post published with both hashtags, entry submitted before the deadline.
+7. **Documentation pass.** Update every file in `docs\` to match the finished build. **Done.** Committed and pushed through `1991b17`, including the solution pitch (`docs/10_SOLUTION_PITCH.md`).
+8. **Ownership steps.** Run the post-build actions in Section 6. **Done for the contest.** Entry submitted 10 November 2026. The optional extras in Section 6 (OpenTimestamps zip, copyright registration) stay available but are not required.
 
 Calibration sits between steps 5 and 7 and is recorded here because it changed the test numbers, not the code shape: commit `8c2b76e` raised the pattern list from 28 to 32 dual-script rules and re-ran the battery. Result: scam caught **7/7**, genuine passed **3/3**, caution **0**, errors **0**, flat across thresholds **0.45–0.65**. The score weights stayed at 0.5/0.5 because the run did not justify moving them.
 
@@ -190,4 +193,4 @@ State these wherever the tool is described. They are not defects to hide; they a
 
 ---
 
-*Last updated: 8 November 2026. Steps 6 and 7 completed. The remaining gap is the ownership actions (step 8).*
+*Last updated: 11 November 2026. All build steps complete. The entry was submitted before the 10 November 2026 deadline, and the inventory now covers docs/00 through docs/10.*
